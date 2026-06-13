@@ -1,4 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PlusCircle } from "lucide-react";
-import { RoutePage } from "@/components/layout/route-page";
-export const Route = createFileRoute("/_authenticated/add-listing")({ component: () => <RoutePage privateArea title="List an item" description="Share the essentials, set your terms, and make something useful available nearby." icon={PlusCircle} /> });
+import { ListingWizard } from "@/components/listing/listing-wizard";
+
+export const Route = createFileRoute("/_authenticated/add-listing")({
+  head: () => ({
+    meta: [
+      { title: "List an Item | Flex My Stuff" },
+      { name: "description", content: "Create and publish a trusted local rental listing in six guided steps." },
+      { property: "og:title", content: "List an Item | Flex My Stuff" },
+      { property: "og:description", content: "Share useful items with your community through a simple guided listing flow." },
+    ],
+  }),
+  component: ListingWizard,
+});
