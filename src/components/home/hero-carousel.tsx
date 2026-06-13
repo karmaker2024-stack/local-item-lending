@@ -2,20 +2,20 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
 
-import skiShare from "@/assets/hero-ski-share.png.asset.json";
-import baseballShare from "@/assets/hero-baseball-share.png.asset.json";
+import skiShare from "@/assets/hero-ski-share.png";
+import baseballShare from "@/assets/hero-baseball-share.png";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const slides = [
   {
-    src: skiShare.url,
+    src: skiShare,
     alt: "A neighbor lending ski poles to a skier",
     label: "Adventure gear, shared locally",
     position: "object-center",
   },
   {
-    src: baseballShare.url,
+    src: baseballShare,
     alt: "A neighbor lending a baseball bat to a player",
     label: "Game day starts next door",
     position: "object-center",
