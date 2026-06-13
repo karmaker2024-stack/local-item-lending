@@ -70,7 +70,7 @@ export function ImpactDashboard() {
       <SiteHeader />
       <Container className="flex gap-8 py-8 sm:py-12">
         <AccountSidebar />
-        <main className="min-w-0 flex-1 space-y-8">
+        <div className="min-w-0 flex-1 space-y-8">
           <section className="relative overflow-hidden rounded-3xl bg-primary px-6 py-8 text-primary-foreground shadow-marketplace sm:px-10 sm:py-10">
             <div className="absolute -right-12 -top-16 size-56 rounded-full bg-highlight/20 blur-3xl" />
             <div className="relative max-w-2xl">
@@ -177,7 +177,7 @@ export function ImpactDashboard() {
               </CardContent></Card>
             </section>
           </div>
-        </main>
+        </div>
       </Container>
       <MobileBottomNavigation />
     </div>

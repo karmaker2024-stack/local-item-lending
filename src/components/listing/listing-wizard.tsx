@@ -140,7 +140,7 @@ export function ListingWizard() {
     <SiteHeader />
     <Container className="flex gap-8 py-7 sm:py-10">
       <AccountSidebar />
-      <main className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1">
         <header className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
           <div className="min-w-0"><p className="text-xs font-bold uppercase tracking-[.18em] text-secondary">Create a listing</p><h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Share something useful</h1><p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">A thoughtful listing helps the right neighbor find your item.</p></div>
           <Button variant="outline" onClick={saveDraft}><Save /> <span className="hidden sm:inline">{saved ? "Draft saved" : "Save draft"}</span></Button>
@@ -163,7 +163,7 @@ export function ListingWizard() {
           <div className="flex min-w-0 justify-end gap-3"><Button variant="outline" onClick={saveDraft} className="hidden sm:inline-flex"><Save />{saved ? "Saved" : "Save draft"}</Button>{step < 5 ? <Button variant="highlight" onClick={next}>Continue<ArrowRight /></Button> : <Button variant="highlight" onClick={publish} disabled={publishing || published}>{publishing ? <><Loader2 className="animate-spin" />Publishing…</> : published ? <><CheckCircle2 />Published</> : <>Publish listing<Check /></>}</Button>}</div>
         </footer>
         {published && <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-highlight bg-highlight/15 p-5"><div><p className="font-bold">Your listing is live.</p><p className="text-sm text-muted-foreground">Neighbors can now discover and request your item.</p></div><Button onClick={() => navigate({ to: "/my-listings" })}>View my listings</Button></div>}
-      </main>
+      </div>
     </Container>
     <MobileBottomNavigation />
   </div>;

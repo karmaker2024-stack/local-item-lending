@@ -114,7 +114,7 @@ export function ItemDetails() {
         <Gallery />
 
         <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_23rem] lg:gap-16">
-          <main className="min-w-0">
+          <div className="min-w-0">
             <section className="border-b border-border pb-9">
               <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-5">
                 <div className="min-w-0"><p className="text-sm font-semibold text-secondary">Owned by Maya</p><h2 className="mt-1 text-2xl font-bold">Ready for your next project</h2></div>
@@ -134,7 +134,7 @@ export function ItemDetails() {
             <Availability range={range} setRange={setRange} />
             <Reviews />
             <Impact />
-          </main>
+          </div>
 
           <aside id="reserve" className="sticky top-24 hidden lg:block">
             <ReserveCard range={range} days={days} rental={rental} fee={fee} total={total} chooseDates={chooseDates} reserved={reserved} onReserve={() => setReserved(true)} />
