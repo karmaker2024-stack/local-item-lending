@@ -30,7 +30,9 @@ import { Route as AuthenticatedEditListingRouteImport } from './routes/_authenti
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated.dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
 import { Route as AuthenticatedAddListingRouteImport } from './routes/_authenticated.add-listing'
+import { Route as AuthenticatedMessagesIndexRouteImport } from './routes/_authenticated.messages.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated.admin.index'
+import { Route as AuthenticatedMessagesThreadIdRouteImport } from './routes/_authenticated.messages.$threadId'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated.admin.users'
 import { Route as AuthenticatedAdminReportsRouteImport } from './routes/_authenticated.admin.reports'
 import { Route as AuthenticatedAdminListingsRouteImport } from './routes/_authenticated.admin.listings'
@@ -141,11 +143,23 @@ const AuthenticatedAddListingRoute = AuthenticatedAddListingRouteImport.update({
   path: '/add-listing',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMessagesIndexRoute =
+  AuthenticatedMessagesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedMessagesRoute,
+  } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedMessagesThreadIdRoute =
+  AuthenticatedMessagesThreadIdRouteImport.update({
+    id: '/$threadId',
+    path: '/$threadId',
+    getParentRoute: () => AuthenticatedMessagesRoute,
+  } as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -178,7 +192,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/edit-listing': typeof AuthenticatedEditListingRoute
   '/impact-dashboard': typeof AuthenticatedImpactDashboardRoute
-  '/messages': typeof AuthenticatedMessagesRoute
+  '/messages': typeof AuthenticatedMessagesRouteWithChildren
   '/my-listings': typeof AuthenticatedMyListingsRoute
   '/my-rentals': typeof AuthenticatedMyRentalsRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -188,7 +202,9 @@ export interface FileRoutesByFullPath {
   '/admin/listings': typeof AuthenticatedAdminListingsRoute
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/messages/$threadId': typeof AuthenticatedMessagesThreadIdRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/messages/': typeof AuthenticatedMessagesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -203,7 +219,6 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/edit-listing': typeof AuthenticatedEditListingRoute
   '/impact-dashboard': typeof AuthenticatedImpactDashboardRoute
-  '/messages': typeof AuthenticatedMessagesRoute
   '/my-listings': typeof AuthenticatedMyListingsRoute
   '/my-rentals': typeof AuthenticatedMyRentalsRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -213,7 +228,9 @@ export interface FileRoutesByTo {
   '/admin/listings': typeof AuthenticatedAdminListingsRoute
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/messages/$threadId': typeof AuthenticatedMessagesThreadIdRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/messages': typeof AuthenticatedMessagesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -231,7 +248,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/edit-listing': typeof AuthenticatedEditListingRoute
   '/_authenticated/impact-dashboard': typeof AuthenticatedImpactDashboardRoute
-  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
+  '/_authenticated/messages': typeof AuthenticatedMessagesRouteWithChildren
   '/_authenticated/my-listings': typeof AuthenticatedMyListingsRoute
   '/_authenticated/my-rentals': typeof AuthenticatedMyRentalsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
@@ -241,7 +258,9 @@ export interface FileRoutesById {
   '/_authenticated/admin/listings': typeof AuthenticatedAdminListingsRoute
   '/_authenticated/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/messages/$threadId': typeof AuthenticatedMessagesThreadIdRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/messages/': typeof AuthenticatedMessagesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -269,7 +288,9 @@ export interface FileRouteTypes {
     | '/admin/listings'
     | '/admin/reports'
     | '/admin/users'
+    | '/messages/$threadId'
     | '/admin/'
+    | '/messages/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -284,7 +305,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/edit-listing'
     | '/impact-dashboard'
-    | '/messages'
     | '/my-listings'
     | '/my-rentals'
     | '/profile'
@@ -294,7 +314,9 @@ export interface FileRouteTypes {
     | '/admin/listings'
     | '/admin/reports'
     | '/admin/users'
+    | '/messages/$threadId'
     | '/admin'
+    | '/messages'
   id:
     | '__root__'
     | '/'
@@ -321,7 +343,9 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/listings'
     | '/_authenticated/admin/reports'
     | '/_authenticated/admin/users'
+    | '/_authenticated/messages/$threadId'
     | '/_authenticated/admin/'
+    | '/_authenticated/messages/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -486,12 +510,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAddListingRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/messages/': {
+      id: '/_authenticated/messages/'
+      path: '/'
+      fullPath: '/messages/'
+      preLoaderRoute: typeof AuthenticatedMessagesIndexRouteImport
+      parentRoute: typeof AuthenticatedMessagesRoute
+    }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/messages/$threadId': {
+      id: '/_authenticated/messages/$threadId'
+      path: '/$threadId'
+      fullPath: '/messages/$threadId'
+      preLoaderRoute: typeof AuthenticatedMessagesThreadIdRouteImport
+      parentRoute: typeof AuthenticatedMessagesRoute
     }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
@@ -534,13 +572,28 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
 const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
+interface AuthenticatedMessagesRouteChildren {
+  AuthenticatedMessagesThreadIdRoute: typeof AuthenticatedMessagesThreadIdRoute
+  AuthenticatedMessagesIndexRoute: typeof AuthenticatedMessagesIndexRoute
+}
+
+const AuthenticatedMessagesRouteChildren: AuthenticatedMessagesRouteChildren = {
+  AuthenticatedMessagesThreadIdRoute: AuthenticatedMessagesThreadIdRoute,
+  AuthenticatedMessagesIndexRoute: AuthenticatedMessagesIndexRoute,
+}
+
+const AuthenticatedMessagesRouteWithChildren =
+  AuthenticatedMessagesRoute._addFileChildren(
+    AuthenticatedMessagesRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAddListingRoute: typeof AuthenticatedAddListingRoute
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEditListingRoute: typeof AuthenticatedEditListingRoute
   AuthenticatedImpactDashboardRoute: typeof AuthenticatedImpactDashboardRoute
-  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
+  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRouteWithChildren
   AuthenticatedMyListingsRoute: typeof AuthenticatedMyListingsRoute
   AuthenticatedMyRentalsRoute: typeof AuthenticatedMyRentalsRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
@@ -554,7 +607,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEditListingRoute: AuthenticatedEditListingRoute,
   AuthenticatedImpactDashboardRoute: AuthenticatedImpactDashboardRoute,
-  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
+  AuthenticatedMessagesRoute: AuthenticatedMessagesRouteWithChildren,
   AuthenticatedMyListingsRoute: AuthenticatedMyListingsRoute,
   AuthenticatedMyRentalsRoute: AuthenticatedMyRentalsRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
@@ -580,13 +633,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
