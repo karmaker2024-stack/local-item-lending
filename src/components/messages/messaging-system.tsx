@@ -462,7 +462,7 @@ export function MessagingSystem({ threadId }: { threadId?: string }) {
                       type="button"
                       size="icon"
                       variant="ghost"
-                      className="size-6 min-h-0"
+                      className="min-h-11 min-w-11"
                       onClick={() => setAttachment(null)}
                       aria-label="Remove attachment"
                     >
