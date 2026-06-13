@@ -40,6 +40,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { BrandLogo } from "@/components/brand/brand-logo";
 
 type Message = {
   id: string;
@@ -238,11 +239,8 @@ export function MessagingSystem({ threadId }: { threadId?: string }) {
   return (
     <div className="min-h-screen bg-background lg:h-screen lg:overflow-hidden">
       <header className="hidden h-18 items-center border-b border-border bg-card px-6 lg:flex">
-        <Link to="/" className="flex items-center gap-3">
-          <span className="grid size-10 place-items-center rounded-xl bg-primary font-display text-lg font-bold text-primary-foreground">
-            F
-          </span>
-          <span className="font-display text-xl font-bold tracking-tight">Flex My Stuff</span>
+        <Link to="/" aria-label="Flex My Stuff home" className="rounded-xl focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
+          <BrandLogo className="h-13 w-24" />
         </Link>
         <div className="ml-auto flex items-center gap-3 text-sm text-muted-foreground">
           <ShieldCheck className="size-4 text-success" /> Messages are protected
