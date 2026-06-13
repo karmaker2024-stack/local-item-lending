@@ -178,3 +178,7 @@
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   &:hover { transform: translateY(-0.25rem); box-shadow: var(--shadow-marketplace); }
 }
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
