@@ -24,12 +24,12 @@ import { Route as AuthenticatedSavedItemsRouteImport } from './routes/_authentic
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated.profile'
 import { Route as AuthenticatedMyRentalsRouteImport } from './routes/_authenticated.my-rentals'
 import { Route as AuthenticatedMyListingsRouteImport } from './routes/_authenticated.my-listings'
-import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated.messages'
 import { Route as AuthenticatedImpactDashboardRouteImport } from './routes/_authenticated.impact-dashboard'
 import { Route as AuthenticatedEditListingRouteImport } from './routes/_authenticated.edit-listing'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated.dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
 import { Route as AuthenticatedAddListingRouteImport } from './routes/_authenticated.add-listing'
+import { Route as AuthenticatedMessagesIndexRouteImport } from './routes/_authenticated.messages.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated.admin.index'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated.admin.users'
 import { Route as AuthenticatedAdminReportsRouteImport } from './routes/_authenticated.admin.reports'
@@ -109,11 +109,6 @@ const AuthenticatedMyListingsRoute = AuthenticatedMyListingsRouteImport.update({
   path: '/my-listings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
-  id: '/messages',
-  path: '/messages',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedImpactDashboardRoute =
   AuthenticatedImpactDashboardRouteImport.update({
     id: '/impact-dashboard',
@@ -141,6 +136,12 @@ const AuthenticatedAddListingRoute = AuthenticatedAddListingRouteImport.update({
   path: '/add-listing',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMessagesIndexRoute =
+  AuthenticatedMessagesIndexRouteImport.update({
+    id: '/messages/',
+    path: '/messages/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -178,7 +179,6 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/edit-listing': typeof AuthenticatedEditListingRoute
   '/impact-dashboard': typeof AuthenticatedImpactDashboardRoute
-  '/messages': typeof AuthenticatedMessagesRoute
   '/my-listings': typeof AuthenticatedMyListingsRoute
   '/my-rentals': typeof AuthenticatedMyRentalsRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -189,6 +189,7 @@ export interface FileRoutesByFullPath {
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/messages/': typeof AuthenticatedMessagesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -203,7 +204,6 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/edit-listing': typeof AuthenticatedEditListingRoute
   '/impact-dashboard': typeof AuthenticatedImpactDashboardRoute
-  '/messages': typeof AuthenticatedMessagesRoute
   '/my-listings': typeof AuthenticatedMyListingsRoute
   '/my-rentals': typeof AuthenticatedMyRentalsRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -214,6 +214,7 @@ export interface FileRoutesByTo {
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/messages': typeof AuthenticatedMessagesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -231,7 +232,6 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/edit-listing': typeof AuthenticatedEditListingRoute
   '/_authenticated/impact-dashboard': typeof AuthenticatedImpactDashboardRoute
-  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/_authenticated/my-listings': typeof AuthenticatedMyListingsRoute
   '/_authenticated/my-rentals': typeof AuthenticatedMyRentalsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
@@ -242,6 +242,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/messages/': typeof AuthenticatedMessagesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -259,7 +260,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/edit-listing'
     | '/impact-dashboard'
-    | '/messages'
     | '/my-listings'
     | '/my-rentals'
     | '/profile'
@@ -270,6 +270,7 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/users'
     | '/admin/'
+    | '/messages/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -284,7 +285,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/edit-listing'
     | '/impact-dashboard'
-    | '/messages'
     | '/my-listings'
     | '/my-rentals'
     | '/profile'
@@ -295,6 +295,7 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/users'
     | '/admin'
+    | '/messages'
   id:
     | '__root__'
     | '/'
@@ -311,7 +312,6 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/edit-listing'
     | '/_authenticated/impact-dashboard'
-    | '/_authenticated/messages'
     | '/_authenticated/my-listings'
     | '/_authenticated/my-rentals'
     | '/_authenticated/profile'
@@ -322,6 +322,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/reports'
     | '/_authenticated/admin/users'
     | '/_authenticated/admin/'
+    | '/_authenticated/messages/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -444,13 +445,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMyListingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/messages': {
-      id: '/_authenticated/messages'
-      path: '/messages'
-      fullPath: '/messages'
-      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/impact-dashboard': {
       id: '/_authenticated/impact-dashboard'
       path: '/impact-dashboard'
@@ -484,6 +478,13 @@ declare module '@tanstack/react-router' {
       path: '/add-listing'
       fullPath: '/add-listing'
       preLoaderRoute: typeof AuthenticatedAddListingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/messages/': {
+      id: '/_authenticated/messages/'
+      path: '/messages'
+      fullPath: '/messages/'
+      preLoaderRoute: typeof AuthenticatedMessagesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin/': {
@@ -540,12 +541,12 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEditListingRoute: typeof AuthenticatedEditListingRoute
   AuthenticatedImpactDashboardRoute: typeof AuthenticatedImpactDashboardRoute
-  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
   AuthenticatedMyListingsRoute: typeof AuthenticatedMyListingsRoute
   AuthenticatedMyRentalsRoute: typeof AuthenticatedMyRentalsRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedSavedItemsRoute: typeof AuthenticatedSavedItemsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedMessagesIndexRoute: typeof AuthenticatedMessagesIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -554,12 +555,12 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEditListingRoute: AuthenticatedEditListingRoute,
   AuthenticatedImpactDashboardRoute: AuthenticatedImpactDashboardRoute,
-  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
   AuthenticatedMyListingsRoute: AuthenticatedMyListingsRoute,
   AuthenticatedMyRentalsRoute: AuthenticatedMyRentalsRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedSavedItemsRoute: AuthenticatedSavedItemsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedMessagesIndexRoute: AuthenticatedMessagesIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
