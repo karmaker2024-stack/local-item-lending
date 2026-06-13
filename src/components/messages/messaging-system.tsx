@@ -253,7 +253,7 @@ export function MessagingSystem({ threadId }: { threadId?: string }) {
         </div>
       </header>
 
-      <main className="mx-auto flex h-dvh max-w-[1600px] bg-card lg:h-[calc(100dvh-4.5rem)] lg:border-x lg:border-border">
+      <div className="mx-auto flex h-dvh max-w-[1600px] bg-card lg:h-[calc(100dvh-4.5rem)] lg:border-x lg:border-border">
         <aside
           className={cn(
             "w-full shrink-0 border-r border-border bg-card lg:block lg:w-[360px]",
@@ -532,7 +532,7 @@ export function MessagingSystem({ threadId }: { threadId?: string }) {
             </div>
           </section>
         )}
-      </main>
+      </div>
     </div>
   );
 }
