@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, Plus } from "lucide-react";
+import { Plus, UserRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/container";
+import { publicNavigation } from "@/lib/navigation";
 
 export function SiteHeader() {
   return (
@@ -13,11 +14,10 @@ export function SiteHeader() {
           <span className="truncate font-display text-xl font-bold tracking-tight text-foreground">Flex My Stuff</span>
         </Link>
         <nav aria-label="Primary navigation" className="hidden items-center gap-8 md:flex">
-          <a className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground" href="#foundations">Foundations</a>
-          <a className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground" href="#components">Components</a>
-          <Button size="sm"><Plus />List an item</Button>
+          {publicNavigation.map(({ label, to }) => <Link key={to} to={to} activeProps={{ className: "text-foreground" }} inactiveProps={{ className: "text-muted-foreground" }} className="text-sm font-medium transition-colors hover:text-foreground">{label}</Link>)}
+          <Button asChild size="sm"><Link to="/add-listing"><Plus />List an item</Link></Button>
         </nav>
-        <Button aria-label="Open navigation menu" className="md:hidden" size="icon" variant="ghost"><Menu /></Button>
+        <Button asChild aria-label="Open account" className="md:hidden" size="icon" variant="ghost"><Link to="/dashboard"><UserRound /></Link></Button>
       </Container>
     </header>
   );
