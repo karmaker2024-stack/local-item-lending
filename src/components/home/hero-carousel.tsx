@@ -34,7 +34,7 @@ export function HeroCarousel() {
 
   return (
     <section aria-roledescription="carousel" aria-label="Neighbors sharing useful gear" className="relative overflow-hidden bg-primary text-primary-foreground lg:min-h-[calc(100svh-5rem)]">
-      <div className="relative aspect-square w-full overflow-hidden bg-muted sm:aspect-[4/3] lg:absolute lg:inset-y-0 lg:left-auto lg:right-0 lg:w-[58%] lg:aspect-auto">
+      <div className="relative aspect-[941/900] w-full bg-primary sm:aspect-[941/820] lg:absolute lg:inset-y-0 lg:right-0 lg:w-[68%] lg:aspect-auto">
         {slides.map((slide, index) => (
           <img
             key={slide.src}
@@ -43,21 +43,21 @@ export function HeroCarousel() {
             aria-hidden={index !== active}
             fetchPriority={index === 0 ? "high" : "auto"}
             className={cn(
-              "absolute inset-0 size-full object-cover transition-all duration-1000 ease-out lg:object-cover",
+              "absolute inset-0 size-full object-contain object-center transition-all duration-1000 ease-out lg:object-contain lg:object-right",
               slide.position,
               index === active ? "scale-100 opacity-100" : "scale-[1.03] opacity-0",
             )}
           />
         ))}
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/25 via-transparent to-transparent lg:bg-gradient-to-r lg:from-primary lg:via-primary/20 lg:to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-primary via-primary/45 to-transparent lg:inset-y-0 lg:left-0 lg:right-auto lg:h-auto lg:w-1/2 lg:bg-gradient-to-r lg:from-primary lg:via-primary/75 lg:to-transparent" />
       </div>
 
-      <div className="relative mx-auto flex w-full max-w-7xl px-4 pb-28 pt-10 sm:px-6 sm:pb-32 sm:pt-12 lg:min-h-[calc(100svh-5rem)] lg:items-center lg:px-8 lg:py-20">
-        <div className="max-w-2xl lg:w-[47%] lg:max-w-none">
+      <div className="relative z-10 mx-auto -mt-28 flex w-full max-w-7xl px-4 pb-28 pt-0 sm:-mt-36 sm:px-6 sm:pb-32 lg:mt-0 lg:min-h-[calc(100svh-5rem)] lg:items-center lg:px-8 lg:py-20">
+        <div className="max-w-2xl lg:w-[55%] lg:max-w-none xl:w-[52%]">
           <p className="mb-5 inline-flex rounded-full border border-primary-foreground/25 bg-primary-foreground/8 px-4 py-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] sm:text-xs">
             {slides[active].label}
           </p>
-          <h1 className="text-5xl font-extrabold leading-[0.94] tracking-[-0.05em] text-primary-foreground sm:text-6xl lg:text-7xl xl:text-[5rem]">
+          <h1 className="max-w-[8.5ch] text-5xl font-extrabold leading-[0.94] tracking-[-0.05em] text-primary-foreground sm:text-6xl lg:text-7xl xl:text-[5rem]">
             Borrow more.<br /><span className="text-highlight">Buy less.</span>
           </h1>
           <p className="mt-6 max-w-xl text-base font-semibold leading-7 text-primary-foreground/85 sm:text-xl sm:leading-8">
