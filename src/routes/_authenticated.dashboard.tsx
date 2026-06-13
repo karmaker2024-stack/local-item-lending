@@ -1,4 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { LayoutDashboard } from "lucide-react";
-import { RoutePage } from "@/components/layout/route-page";
-export const Route = createFileRoute("/_authenticated/dashboard")({ component: () => <RoutePage privateArea title="Your sharing hub" description="See requests, upcoming handoffs, messages, and activity at a glance." icon={LayoutDashboard} eyebrow="Dashboard" /> });
+import { Dashboard } from "@/components/dashboard/dashboard";
+
+export const Route = createFileRoute("/_authenticated/dashboard")({
+  component: Dashboard,
+  head: () => ({
+    meta: [
+      { title: "Dashboard — Flex My Stuff" },
+      { name: "description", content: "Your personal sharing hub. Manage rentals, listings, messages, and track your sustainability impact." },
+    ],
+  }),
+});
