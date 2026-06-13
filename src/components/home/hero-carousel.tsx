@@ -90,7 +90,8 @@ export function HeroCarousel() {
         </div>
       </div>
 
-      <div className="absolute bottom-5 left-4 right-4 z-10 mx-auto flex max-w-7xl items-center justify-between sm:bottom-7 sm:px-2">
+      {/* Slide dots */}
+      <div className="absolute bottom-5 left-4 right-4 z-20 mx-auto flex max-w-7xl items-center sm:bottom-7 sm:px-2">
         <div className="flex gap-2" role="tablist" aria-label="Choose hero image">
           {slides.map((slide, index) => (
             <Button key={slide.src} type="button" size="icon" variant="ghost" role="tab" aria-selected={index === active} aria-label={`Show slide ${index + 1}`} onClick={() => selectSlide(index)} className="size-11 rounded-full hover:bg-primary-foreground/15">
@@ -98,9 +99,15 @@ export function HeroCarousel() {
             </Button>
           ))}
         </div>
-        <div className="flex gap-2">
-          <Button type="button" size="icon" variant="secondary" className="size-11 rounded-full" aria-label="Previous image" onClick={() => selectSlide(active - 1)}><ArrowLeft /></Button>
-          <Button type="button" size="icon" variant="secondary" className="size-11 rounded-full" aria-label="Next image" onClick={() => selectSlide(active + 1)}><ArrowRight /></Button>
+      </div>
+
+      {/* Prev / Next arrows over the image */}
+      <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-between px-2 sm:px-4 lg:px-6">
+        <div className="pointer-events-auto">
+          <Button type="button" size="icon" variant="secondary" className="size-11 rounded-full shadow-lg" aria-label="Previous image" onClick={() => selectSlide(active - 1)}><ArrowLeft /></Button>
+        </div>
+        <div className="pointer-events-auto">
+          <Button type="button" size="icon" variant="secondary" className="size-11 rounded-full shadow-lg" aria-label="Next image" onClick={() => selectSlide(active + 1)}><ArrowRight /></Button>
         </div>
       </div>
     </section>
