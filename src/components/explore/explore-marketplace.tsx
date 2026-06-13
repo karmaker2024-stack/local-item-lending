@@ -1,0 +1,84 @@
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { CalendarDays, ChevronDown, Filter, Heart, Leaf, MapPin, Search, SlidersHorizontal, Star, X } from "lucide-react";
+
+import drillImage from "@/assets/listing-drill.jpg";
+import campingImage from "@/assets/listing-camping.jpg";
+import cameraImage from "@/assets/listing-camera.jpg";
+import mixerImage from "@/assets/listing-mixer.jpg";
+import projectorImage from "@/assets/listing-projector.jpg";
+import paddleboardImage from "@/assets/listing-paddleboard.jpg";
+import cleanerImage from "@/assets/listing-cleaner.jpg";
+import eventImage from "@/assets/listing-event.jpg";
+import { Container } from "@/components/layout/container";
+import { SiteHeader } from "@/components/navigation/site-header";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Slider } from "@/components/ui/slider";
+
+type Listing = { id: string; title: string; category: string; image: string; price: number; distance: number; rating: number; owner: string; condition: string; score: number; available: boolean };
+const listings: Listing[] = [
+  { id: "cordless-drill-kit", title: "Cordless drill kit", category: "Tools", image: drillImage, price: 12, distance: .8, rating: 4.9, owner: "Maya", condition: "Like new", score: 92, available: true },
+  { id: "camping-tent", title: "4-person camping set", category: "Camping", image: campingImage, price: 24, distance: 1.2, rating: 5, owner: "Jon", condition: "Good", score: 88, available: true },
+  { id: "mirrorless-camera", title: "Mirrorless camera kit", category: "Photography", image: cameraImage, price: 38, distance: 1.6, rating: 4.8, owner: "Priya", condition: "Like new", score: 84, available: false },
+  { id: "stand-mixer", title: "Professional stand mixer", category: "Events", image: mixerImage, price: 16, distance: 2.1, rating: 4.9, owner: "Alex", condition: "Good", score: 90, available: true },
+  { id: "projector", title: "Portable HD projector", category: "Electronics", image: projectorImage, price: 28, distance: 2.4, rating: 4.7, owner: "Luis", condition: "Like new", score: 79, available: true },
+  { id: "paddleboards", title: "Paddle board pair", category: "Sports", image: paddleboardImage, price: 32, distance: 3.2, rating: 4.9, owner: "Nia", condition: "Good", score: 94, available: true },
+  { id: "carpet-cleaner", title: "Deep carpet cleaner", category: "Tools", image: cleanerImage, price: 20, distance: 3.8, rating: 4.6, owner: "Sam", condition: "Fair", score: 87, available: true },
+  { id: "garden-party-set", title: "Garden table & chairs", category: "Events", image: eventImage, price: 26, distance: 4.5, rating: 4.8, owner: "Grace", condition: "Good", score: 91, available: false },
+];
+const categories = ["Tools", "Electronics", "Camping", "Photography", "Sports", "Events"];
+const conditions = ["Like new", "Good", "Fair"];
+
+export function ExploreMarketplace() {
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("All categories");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [price, setPrice] = useState([0, 50]);
+  const [distance, setDistance] = useState([5]);
+  const [rating, setRating] = useState(0);
+  const [condition, setCondition] = useState<string[]>([]);
+  const [available, setAvailable] = useState(false);
+  const [sort, setSort] = useState("recommended");
+  const [saved, setSaved] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => { const timer = window.setTimeout(() => setLoading(false), 650); return () => window.clearTimeout(timer); }, []);
+  const activeFilters = selectedCategories.length + condition.length + (available ? 1 : 0) + (rating ? 1 : 0);
+  const results = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    const effectiveCategories = category === "All categories" ? selectedCategories : [category];
+    const filtered = listings.filter((item) => (!normalized || `${item.title} ${item.category}`.toLowerCase().includes(normalized)) && (!effectiveCategories.length || effectiveCategories.includes(item.category)) && item.price >= price[0] && item.price <= price[1] && item.distance <= distance[0] && (!rating || item.rating >= rating) && (!condition.length || condition.includes(item.condition)) && (!available || item.available));
+    return [...filtered].sort((a, b) => sort === "price-low" ? a.price - b.price : sort === "distance" ? a.distance - b.distance : sort === "rating" ? b.rating - a.rating : b.score - a.score);
+  }, [query, category, selectedCategories, price, distance, rating, condition, available, sort]);
+
+  const clearFilters = () => { setSelectedCategories([]); setPrice([0, 50]); setDistance([5]); setRating(0); setCondition([]); setAvailable(false); setCategory("All categories"); };
+  return <div className="min-h-screen bg-background"><SiteHeader />
+    <div className="sticky top-18 z-40 border-b border-border/70 bg-background/95 py-3 backdrop-blur-xl"><Container><div className="grid gap-2 rounded-3xl border border-border bg-card p-2 shadow-marketplace md:grid-cols-[minmax(0,1.4fr)_minmax(0,.8fr)_minmax(0,.8fr)_auto] md:rounded-full">
+      <label className="relative min-w-0"><span className="sr-only">Search marketplace</span><Search className="absolute left-4 top-1/2 z-10 size-5 -translate-y-1/2 text-muted-foreground" /><Input value={query} onChange={(event) => setQuery(event.target.value)} className="border-0 bg-transparent pl-12 shadow-none focus-visible:ring-0" placeholder="What are you looking for?" />{query && <Button aria-label="Clear search" onClick={() => setQuery("")} className="absolute right-1 top-1/2 -translate-y-1/2" size="icon" variant="ghost"><X /></Button>}</label>
+      <button className="flex min-h-12 items-center gap-3 rounded-xl bg-muted/60 px-4 text-left text-sm font-semibold md:rounded-full"><MapPin className="size-4 text-accent" /><span className="min-w-0 flex-1 truncate">Near me · 5 mi</span><ChevronDown className="size-4 text-muted-foreground" /></button>
+      <Select value={category} onValueChange={setCategory}><SelectTrigger aria-label="Category" className="min-h-12 border-0 bg-muted/60 px-4 shadow-none md:rounded-full"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="All categories">All categories</SelectItem>{categories.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}</SelectContent></Select>
+      <Button size="lg" variant="highlight">Search</Button>
+    </div></Container></div>
+
+    <Container className="py-7"><div className="mb-6 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4"><div className="min-w-0"><p className="text-xs font-bold uppercase tracking-[.18em] text-secondary">Explore marketplace</p><h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Useful things, close to home.</h1><p className="mt-2 text-sm text-muted-foreground">{loading ? "Finding the best local items…" : `${results.length} items available within ${distance[0]} miles`}</p></div><div className="flex items-center gap-2"><MobileFilters activeFilters={activeFilters} clearFilters={clearFilters}><Filters selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} price={price} setPrice={setPrice} distance={distance} setDistance={setDistance} rating={rating} setRating={setRating} condition={condition} setCondition={setCondition} available={available} setAvailable={setAvailable} /></MobileFilters><Select value={sort} onValueChange={setSort}><SelectTrigger aria-label="Sort listings" className="hidden min-h-11 w-44 bg-card sm:flex"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="recommended">Recommended</SelectItem><SelectItem value="distance">Nearest first</SelectItem><SelectItem value="price-low">Price: low to high</SelectItem><SelectItem value="rating">Highest rated</SelectItem></SelectContent></Select></div></div>
+      <div className="grid items-start gap-8 lg:grid-cols-[16rem_minmax(0,1fr)]"><aside className="sticky top-44 hidden max-h-[calc(100vh-12rem)] overflow-y-auto border-r border-border pr-7 lg:block"><div className="mb-5 flex items-center justify-between"><span className="flex items-center gap-2 font-display text-lg font-bold"><SlidersHorizontal className="size-5" />Filters</span>{activeFilters > 0 && <button onClick={clearFilters} className="text-xs font-bold text-primary underline underline-offset-4">Clear</button>}</div><Filters selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} price={price} setPrice={setPrice} distance={distance} setDistance={setDistance} rating={rating} setRating={setRating} condition={condition} setCondition={setCondition} available={available} setAvailable={setAvailable} /></aside>
+        <div className="min-w-0">{loading ? <ListingSkeleton /> : results.length ? <div className="grid gap-x-5 gap-y-9 sm:grid-cols-2 xl:grid-cols-3">{results.map((item) => <ListingCard key={item.id} item={item} saved={saved.includes(item.id)} onSave={() => setSaved((current) => current.includes(item.id) ? current.filter((id) => id !== item.id) : [...current, item.id])} />)}</div> : <EmptyState clearFilters={clearFilters} />}</div>
+      </div>
+    </Container>
+  </div>;
+}
+
+type FilterProps = { selectedCategories: string[]; setSelectedCategories: (value: string[]) => void; price: number[]; setPrice: (value: number[]) => void; distance: number[]; setDistance: (value: number[]) => void; rating: number; setRating: (value: number) => void; condition: string[]; setCondition: (value: string[]) => void; available: boolean; setAvailable: (value: boolean) => void };
+function Filters(props: FilterProps) { return <div className="space-y-7"><FilterGroup title="Categories">{categories.map((item) => <CheckRow key={item} label={item} checked={props.selectedCategories.includes(item)} onChange={(checked) => props.setSelectedCategories(checked ? [...props.selectedCategories, item] : props.selectedCategories.filter((value) => value !== item))} />)}</FilterGroup><FilterGroup title="Price per day"><div className="mb-4 flex items-center justify-between text-sm font-semibold"><span>${props.price[0]}</span><span>${props.price[1]}+</span></div><Slider min={0} max={50} step={2} value={props.price} onValueChange={props.setPrice} aria-label="Price range" /></FilterGroup><FilterGroup title="Distance"><div className="mb-4 flex items-center justify-between text-sm"><span>Within</span><strong>{props.distance[0]} miles</strong></div><Slider min={1} max={25} value={props.distance} onValueChange={props.setDistance} aria-label="Distance" /></FilterGroup><FilterGroup title="Availability"><CheckRow label="Available now" checked={props.available} onChange={props.setAvailable} icon={<CalendarDays className="size-4 text-muted-foreground" />} /></FilterGroup><FilterGroup title="Rating">{[4.8,4.5,4].map((value) => <button key={value} onClick={() => props.setRating(props.rating === value ? 0 : value)} className={`flex min-h-10 w-full items-center gap-2 rounded-lg px-2 text-sm transition-colors ${props.rating === value ? "bg-highlight/30 font-bold" : "hover:bg-muted"}`}><Star className="size-4 fill-highlight text-highlight-foreground" />{value}+ <span className="text-muted-foreground">& up</span></button>)}</FilterGroup><FilterGroup title="Condition">{conditions.map((item) => <CheckRow key={item} label={item} checked={props.condition.includes(item)} onChange={(checked) => props.setCondition(checked ? [...props.condition, item] : props.condition.filter((value) => value !== item))} />)}</FilterGroup></div>; }
+function FilterGroup({ title, children }: { title: string; children: React.ReactNode }) { return <fieldset className="border-b border-border pb-7 last:border-0"><legend className="mb-4 font-display font-bold">{title}</legend><div className="space-y-2">{children}</div></fieldset>; }
+function CheckRow({ label, checked, onChange, icon }: { label: string; checked: boolean; onChange: (checked: boolean) => void; icon?: React.ReactNode }) { const id = `filter-${label.replaceAll(" ", "-").toLowerCase()}`; return <label htmlFor={id} className="flex min-h-10 cursor-pointer items-center gap-3 rounded-lg px-2 text-sm hover:bg-muted"><Checkbox id={id} checked={checked} onCheckedChange={(value) => onChange(value === true)} />{icon}<span>{label}</span></label>; }
+
+function ListingCard({ item, saved, onSave }: { item: Listing; saved: boolean; onSave: () => void }) { return <article className="group min-w-0"><div className="relative overflow-hidden rounded-2xl bg-muted"><Link to="/item/$id" params={{ id: item.id }}><img src={item.image} alt={item.title} width={768} height={768} loading="lazy" className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" /></Link><Button aria-label={saved ? `Remove ${item.title} from saved items` : `Save ${item.title}`} aria-pressed={saved} onClick={onSave} className={`absolute right-3 top-3 bg-card/90 backdrop-blur hover:bg-card ${saved ? "text-destructive" : "text-foreground"}`} size="icon" variant="ghost"><Heart className={saved ? "fill-current" : ""} /></Button>{item.available && <span className="absolute bottom-3 left-3 rounded-full bg-card/90 px-3 py-1.5 text-xs font-bold text-success shadow-subtle backdrop-blur">Available now</span>}</div><Link to="/item/$id" params={{ id: item.id }} className="block pt-4"><div className="flex items-start justify-between gap-3"><h2 className="min-w-0 truncate font-display text-lg font-bold group-hover:underline group-hover:decoration-highlight group-hover:decoration-2 group-hover:underline-offset-4">{item.title}</h2><span className="flex shrink-0 items-center gap-1 text-sm font-semibold"><Star className="size-4 fill-highlight text-highlight-foreground" />{item.rating}</span></div><p className="mt-1 text-sm text-muted-foreground">Owned by {item.owner} · {item.distance} mi away</p><div className="mt-3 flex items-end justify-between gap-3"><p><strong className="font-display text-lg">${item.price}</strong><span className="text-sm text-muted-foreground"> / day</span></p><span className="flex items-center gap-1.5 rounded-full bg-highlight/20 px-2.5 py-1 text-xs font-bold text-highlight-foreground"><Leaf className="size-3.5" />{item.score} impact</span></div></Link></article>; }
+function MobileFilters({ children, activeFilters, clearFilters }: { children: React.ReactNode; activeFilters: number; clearFilters: () => void }) { return <Sheet><SheetTrigger asChild><Button className="relative lg:hidden" variant="outline"><Filter />Filters{activeFilters > 0 && <span className="grid size-5 place-items-center rounded-full bg-highlight text-[.65rem] text-highlight-foreground">{activeFilters}</span>}</Button></SheetTrigger><SheetContent side="bottom" className="max-h-[90dvh] overflow-y-auto rounded-t-3xl"><SheetHeader><SheetTitle className="font-display text-2xl">Filters</SheetTitle></SheetHeader><div className="mt-6">{children}</div><SheetFooter className="sticky bottom-0 mt-6 grid grid-cols-2 gap-3 bg-background py-4"><Button onClick={clearFilters} variant="outline">Clear all</Button><SheetClose asChild><Button variant="highlight">Show results</Button></SheetClose></SheetFooter></SheetContent></Sheet>; }
+function ListingSkeleton() { return <div className="grid gap-x-5 gap-y-9 sm:grid-cols-2 xl:grid-cols-3">{Array.from({ length: 6 }).map((_, index) => <div key={index}><Skeleton className="aspect-[4/3] w-full rounded-2xl" /><Skeleton className="mt-4 h-5 w-3/4" /><Skeleton className="mt-2 h-4 w-1/2" /><div className="mt-4 flex justify-between"><Skeleton className="h-5 w-20" /><Skeleton className="h-6 w-24 rounded-full" /></div></div>)}</div>; }
+function EmptyState({ clearFilters }: { clearFilters: () => void }) { return <div className="grid min-h-96 place-items-center rounded-3xl border border-dashed border-border bg-card p-8 text-center"><div><span className="mx-auto grid size-14 place-items-center rounded-2xl bg-highlight/25 text-primary"><Search /></span><h2 className="mt-5 text-2xl font-bold">Nothing nearby matches yet</h2><p className="mx-auto mt-2 max-w-sm text-muted-foreground">Try widening your distance or clearing a few filters.</p><Button onClick={clearFilters} className="mt-6" variant="highlight">Clear all filters</Button></div></div>; }
