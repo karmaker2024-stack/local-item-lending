@@ -6,7 +6,10 @@ export const Route = createFileRoute("/_authenticated/messages/")({
   head: () => ({
     meta: [
       { title: "Messages — Flex My Stuff" },
-      { name: "description", content: "Coordinate bookings, pickups, returns, and questions with your community." },
+      {
+        name: "description",
+        content: "Coordinate bookings, pickups, returns, and questions with your community.",
+      },
     ],
   }),
 });
