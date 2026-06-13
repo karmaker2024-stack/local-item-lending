@@ -59,7 +59,7 @@ export function HeroCarousel() {
             aria-hidden={index !== active}
             fetchPriority={index === 0 ? "high" : "auto"}
             className={cn(
-              "absolute inset-0 size-full object-cover object-center transition-all duration-1000 ease-out lg:object-cover lg:object-right",
+              "absolute inset-0 size-full object-contain object-center transition-all duration-1000 ease-out lg:object-contain lg:object-right",
               slide.position,
               index === active ? "scale-100 opacity-100" : "scale-[1.03] opacity-0",
             )}
