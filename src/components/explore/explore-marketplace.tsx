@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { CalendarDays, ChevronDown, Filter, Heart, Leaf, MapPin, Search, SlidersHorizontal, Star, X } from "lucide-react";
+import { CalendarDays, ChevronDown, Filter, Heart, Leaf, MapPin, Search, ShieldCheck, SlidersHorizontal, Star, X } from "lucide-react";
 
 import drillImage from "@/assets/listing-drill.jpg";
 import campingImage from "@/assets/listing-camping.jpg";
