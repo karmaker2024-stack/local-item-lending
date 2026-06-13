@@ -5,12 +5,12 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold cursor-pointer transition-all duration-200 focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed active:translate-y-px [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-bold cursor-pointer transition-all duration-300 ease-out focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow-subtle hover:bg-primary/90 hover:shadow-marketplace",
-        highlight: "bg-highlight text-highlight-foreground shadow-subtle hover:bg-highlight/88 hover:shadow-marketplace",
+        default: "bg-primary text-primary-foreground shadow-subtle hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-marketplace",
+        highlight: "bg-highlight text-highlight-foreground shadow-subtle hover:-translate-y-0.5 hover:bg-highlight/88 hover:shadow-marketplace",
         destructive: "bg-destructive text-destructive-foreground shadow-subtle hover:bg-destructive/90",
         outline:
           "border border-input bg-background shadow-subtle hover:border-primary/30 hover:bg-muted",
