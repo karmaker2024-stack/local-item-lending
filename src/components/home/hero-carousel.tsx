@@ -1,7 +1,6 @@
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import heroImage from "@/assets/flex-hero.jpg";
 import skiShareImage from "@/assets/hero-ski-share.jpeg";
 import sportsShareImage from "@/assets/hero-sports-share.jpeg";
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,6 @@ import {
 import { cn } from "@/lib/utils";
 
 const slides = [
-  { src: heroImage, alt: "Neighbors sharing tools and outdoor equipment" },
   { src: skiShareImage, alt: "A skier borrowing ski poles from a local community member" },
   { src: sportsShareImage, alt: "A baseball player borrowing a bat from a neighbor" },
 ];
