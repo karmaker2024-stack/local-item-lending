@@ -12,13 +12,13 @@ const slides = [
     src: skiShare.url,
     alt: "A neighbor lending ski poles to a skier",
     label: "Adventure gear, shared locally",
-    position: "object-[48%_center]",
+    position: "object-center",
   },
   {
     src: baseballShare.url,
     alt: "A neighbor lending a baseball bat to a player",
     label: "Game day starts next door",
-    position: "object-[52%_center]",
+    position: "object-center",
   },
 ] as const;
 
@@ -33,8 +33,8 @@ export function HeroCarousel() {
   const selectSlide = (index: number) => setActive((index + slides.length) % slides.length);
 
   return (
-    <section aria-roledescription="carousel" aria-label="Neighbors sharing useful gear" className="relative min-h-[calc(100svh-4.5rem)] overflow-hidden bg-primary text-primary-foreground lg:min-h-[calc(100svh-5rem)]">
-      <div className="absolute inset-0">
+    <section aria-roledescription="carousel" aria-label="Neighbors sharing useful gear" className="relative overflow-hidden bg-primary text-primary-foreground lg:min-h-[calc(100svh-5rem)]">
+      <div className="relative aspect-square w-full overflow-hidden bg-muted sm:aspect-[4/3] lg:absolute lg:inset-y-0 lg:left-auto lg:right-0 lg:w-[58%] lg:aspect-auto">
         {slides.map((slide, index) => (
           <img
             key={slide.src}
@@ -43,21 +43,21 @@ export function HeroCarousel() {
             aria-hidden={index !== active}
             fetchPriority={index === 0 ? "high" : "auto"}
             className={cn(
-              "absolute inset-0 size-full object-cover transition-all duration-1000 ease-out",
+              "absolute inset-0 size-full object-cover transition-all duration-1000 ease-out lg:object-cover",
               slide.position,
               index === active ? "scale-100 opacity-100" : "scale-[1.03] opacity-0",
             )}
           />
         ))}
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/25 via-primary/15 to-primary/90 sm:bg-gradient-to-r sm:from-primary/90 sm:via-primary/55 sm:to-primary/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/25 via-transparent to-transparent lg:bg-gradient-to-r lg:from-primary lg:via-primary/20 lg:to-transparent" />
       </div>
 
-      <div className="relative mx-auto flex min-h-[calc(100svh-4.5rem)] w-full max-w-7xl items-end px-4 pb-24 pt-24 sm:items-center sm:px-6 sm:pb-28 lg:min-h-[calc(100svh-5rem)] lg:px-8">
-        <div className="max-w-2xl">
-          <p className="mb-5 inline-flex rounded-full border border-primary-foreground/25 bg-primary/35 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] backdrop-blur-md">
+      <div className="relative mx-auto flex w-full max-w-7xl px-4 pb-28 pt-10 sm:px-6 sm:pb-32 sm:pt-12 lg:min-h-[calc(100svh-5rem)] lg:items-center lg:px-8 lg:py-20">
+        <div className="max-w-2xl lg:w-[47%] lg:max-w-none">
+          <p className="mb-5 inline-flex rounded-full border border-primary-foreground/25 bg-primary-foreground/8 px-4 py-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] sm:text-xs">
             {slides[active].label}
           </p>
-          <h1 className="text-5xl font-extrabold leading-[0.94] tracking-[-0.05em] text-primary-foreground sm:text-6xl lg:text-7xl xl:text-[5.4rem]">
+          <h1 className="text-5xl font-extrabold leading-[0.94] tracking-[-0.05em] text-primary-foreground sm:text-6xl lg:text-7xl xl:text-[5rem]">
             Borrow more.<br /><span className="text-highlight">Buy less.</span>
           </h1>
           <p className="mt-6 max-w-xl text-base font-semibold leading-7 text-primary-foreground/85 sm:text-xl sm:leading-8">
@@ -74,7 +74,7 @@ export function HeroCarousel() {
         </div>
       </div>
 
-      <div className="absolute bottom-6 left-4 right-4 z-10 mx-auto flex max-w-7xl items-center justify-between sm:bottom-8 sm:px-2">
+      <div className="absolute bottom-5 left-4 right-4 z-10 mx-auto flex max-w-7xl items-center justify-between sm:bottom-7 sm:px-2">
         <div className="flex gap-2" role="tablist" aria-label="Choose hero image">
           {slides.map((slide, index) => (
             <Button key={slide.src} type="button" size="icon" variant="ghost" role="tab" aria-selected={index === active} aria-label={`Show slide ${index + 1}`} onClick={() => selectSlide(index)} className="size-11 rounded-full hover:bg-primary-foreground/15">
