@@ -4,7 +4,8 @@ import {
   FileText, Flag, Image as ImageIcon, MapPin, MoreHorizontal, Paperclip,
   Search, Send, ShieldCheck, Star, X,
 } from "lucide-react";
-import { FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { FormEvent, KeyboardEvent } from "react";
 
 import drillImage from "@/assets/listing-drill.jpg";
 import cameraImage from "@/assets/listing-camera.jpg";
@@ -110,7 +111,7 @@ export function MessagingSystem({ threadId }: { threadId?: string }) {
         </div>
       </header>
 
-      <main className="mx-auto flex h-[calc(100dvh-4.5rem)] max-w-[1600px] bg-card lg:border-x lg:border-border">
+      <main className="mx-auto flex h-dvh max-w-[1600px] bg-card lg:h-[calc(100dvh-4.5rem)] lg:border-x lg:border-border">
         <aside className={cn("w-full shrink-0 border-r border-border bg-card lg:block lg:w-[360px]", active && "hidden")}>
           <div className="border-b border-border px-5 pb-4 pt-5">
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
