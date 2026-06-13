@@ -33,8 +33,24 @@ export function HeroCarousel() {
   const selectSlide = (index: number) => setActive((index + slides.length) % slides.length);
 
   return (
-    <section aria-roledescription="carousel" aria-label="Neighbors sharing useful gear" className="relative overflow-hidden bg-primary text-primary-foreground lg:min-h-[calc(100svh-5rem)]">
-      <div className="relative aspect-[941/900] w-full bg-primary sm:aspect-[941/820] lg:absolute lg:inset-y-0 lg:right-0 lg:w-[68%] lg:aspect-auto">
+    <section aria-roledescription="carousel" aria-label="Neighbors sharing useful gear" className="relative overflow-hidden bg-primary text-primary-foreground lg:h-[calc(100svh-5rem)] lg:min-h-[620px] lg:max-h-[820px]">
+      <div className="absolute inset-0 hidden lg:block">
+        {slides.map((slide, index) => (
+          <img
+            key={`wash-${slide.src}`}
+            src={slide.src}
+            alt=""
+            aria-hidden="true"
+            className={cn(
+              "absolute inset-0 size-full scale-105 object-cover object-center opacity-35 blur-sm transition-opacity duration-1000 ease-out",
+              index === active ? "opacity-35" : "opacity-0",
+            )}
+          />
+        ))}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/82 to-primary/20" />
+      </div>
+
+      <div className="relative aspect-[941/900] w-full bg-primary sm:aspect-[941/820] lg:absolute lg:inset-y-0 lg:right-0 lg:w-[68vw] lg:max-w-[920px] lg:aspect-auto lg:bg-transparent">
         {slides.map((slide, index) => (
           <img
             key={slide.src}
@@ -43,7 +59,7 @@ export function HeroCarousel() {
             aria-hidden={index !== active}
             fetchPriority={index === 0 ? "high" : "auto"}
             className={cn(
-              "absolute inset-0 size-full object-contain object-center transition-all duration-1000 ease-out lg:object-contain lg:object-right",
+              "absolute inset-0 size-full object-cover object-center transition-all duration-1000 ease-out lg:object-cover lg:object-right",
               slide.position,
               index === active ? "scale-100 opacity-100" : "scale-[1.03] opacity-0",
             )}
