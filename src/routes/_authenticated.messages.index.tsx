@@ -1,4 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MessageCircle } from "lucide-react";
-import { RoutePage } from "@/components/layout/route-page";
-export const Route = createFileRoute("/_authenticated/messages/")({ component: () => <RoutePage privateArea title="Messages" description="Coordinate requests, handoffs, returns, and questions with owners and renters." icon={MessageCircle} searchPlaceholder="Search conversations" /> });
+import { MessagingSystem } from "@/components/messages/messaging-system";
+
+export const Route = createFileRoute("/_authenticated/messages/")({
+  component: () => <MessagingSystem />,
+  head: () => ({
+    meta: [
+      { title: "Messages — Flex My Stuff" },
+      { name: "description", content: "Coordinate bookings, pickups, returns, and questions with your community." },
+    ],
+  }),
+});

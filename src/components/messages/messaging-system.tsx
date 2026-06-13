@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft, CalendarDays, Check, CheckCheck, ChevronRight, CircleEllipsis,
   FileText, Flag, Image as ImageIcon, MapPin, MoreHorizontal, Paperclip,
@@ -60,7 +60,6 @@ const conversations: Conversation[] = [
 const quickReplies = ["Sounds good!", "What time works for you?", "I’m on my way", "Thanks for letting me know"];
 
 export function MessagingSystem({ threadId }: { threadId?: string }) {
-  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [messagesByThread, setMessagesByThread] = useState<Record<string, Message[]>>(() =>
     Object.fromEntries(conversations.map((conversation) => [conversation.id, conversation.messages])),
