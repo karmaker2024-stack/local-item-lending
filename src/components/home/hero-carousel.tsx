@@ -68,7 +68,7 @@ export function HeroCarousel() {
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-primary via-primary/45 to-transparent lg:inset-y-0 lg:left-0 lg:right-auto lg:h-auto lg:w-1/2 lg:bg-gradient-to-r lg:from-primary lg:via-primary/75 lg:to-transparent" />
       </div>
 
-      <div className="relative z-10 mx-auto -mt-28 flex w-full max-w-7xl px-4 pb-28 pt-0 sm:-mt-36 sm:px-6 sm:pb-32 lg:mt-0 lg:min-h-[calc(100svh-5rem)] lg:items-center lg:px-8 lg:py-20">
+      <div className="relative z-10 mx-auto -mt-28 flex w-full max-w-7xl px-4 pb-28 pt-0 sm:-mt-36 sm:px-6 sm:pb-32 lg:mt-0 lg:h-full lg:items-center lg:px-8 lg:py-20">
         <div className="max-w-2xl lg:w-[55%] lg:max-w-none xl:w-[52%]">
           <p className="mb-5 inline-flex rounded-full border border-primary-foreground/25 bg-primary-foreground/8 px-4 py-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] sm:text-xs">
             {slides[active].label}
