@@ -4,6 +4,7 @@ import { ArrowRight, Eye, EyeOff, KeyRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { BrandLogo } from "@/components/brand/brand-logo";
 import { lovable } from "@/integrations/lovable";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -35,7 +36,7 @@ export function AuthPage({ mode }: { mode: "login" | "signup" }) {
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       <div className="flex flex-col p-6 sm:p-10">
-        <Link to="/" className="flex items-center gap-3 font-display text-xl font-bold"><span className="grid size-10 place-items-center rounded-xl bg-primary text-primary-foreground">F</span>Flex My Stuff</Link>
+        <Link to="/" aria-label="Flex My Stuff home" className="w-fit rounded-xl focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/40"><BrandLogo className="h-18 w-32" /></Link>
         <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-12">
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-secondary">{signup ? "Join your neighborhood" : "Welcome back"}</p>
           <h1 className="mt-3 text-4xl font-bold tracking-tight">{signup ? "Create your account" : "Sign in to keep sharing"}</h1>
