@@ -159,38 +159,81 @@ function Field({ label, id, children }: { label: string; id: string; children: R
   );
 }
 
+import whiteLogoAsset from "@/assets/flex-my-stuff-logo-white.png.asset.json";
+
 function SiteFooter({ isAuthenticated }: { isAuthenticated: boolean }) {
+  const quickLinks = [
+    { label: "Find a Flex", href: "/explore" },
+    { label: "How It Works", href: "/how-it-works" },
+    { label: "Flex an Item", href: "/add-listing" },
+    { label: "My Account", href: isAuthenticated ? "/dashboard" : "/signin" },
+    { label: "Contact", href: "#contact" },
+  ] as const;
+
+  const socials = [
+    { label: "Facebook", href: "https://facebook.com", Icon: Facebook },
+    { label: "Instagram", href: "https://instagram.com", Icon: Instagram },
+    { label: "LinkedIn", href: "https://linkedin.com", Icon: Linkedin },
+    { label: "X / Twitter", href: "https://x.com", Icon: Twitter },
+  ] as const;
+
   return (
-    <footer className="border-t border-border bg-primary py-12 text-primary-foreground">
+    <footer className="bg-[#111111] py-14 text-white">
       <Container>
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <Link to="/" aria-label="Flex My Stuff home" className="inline-block rounded-xl focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-highlight/50">
-              <BrandLogo inverse className="h-20" />
+        <div className="flex flex-col items-center gap-10 md:flex-row md:items-start md:justify-between">
+          {/* Left — Logo & description */}
+          <div className="flex flex-col items-center text-center md:items-start md:text-left">
+            <Link to="/" aria-label="Flex My Stuff home" className="inline-block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BDD328]/50">
+              <img
+                src={whiteLogoAsset.url}
+                alt="Flex My Stuff"
+                className="h-16 w-auto object-contain"
+              />
             </Link>
-            <p className="mt-4 max-w-xs text-sm leading-6 text-primary-foreground/60">A more useful, connected, and sustainable neighborhood starts with sharing.</p>
-            <ul className="mt-5 flex items-center gap-3">
-              {socialLinks.slice(0, 4).map(({ label, href, Icon }) => (
+            <p className="mt-5 max-w-xs text-sm leading-6 text-white/55">
+              Flex My Stuff helps people access what they need and earn from what they own through a trusted peer-to-peer rental marketplace.
+            </p>
+          </div>
+
+          {/* Middle — Quick Links */}
+          <div className="text-center md:text-left">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#BDD328]">Quick Links</p>
+            <ul className="mt-5 space-y-3">
+              {quickLinks.map(({ label, href }) => (
                 <li key={label}>
-                  <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="grid size-10 place-items-center rounded-xl bg-primary-foreground/8 text-primary-foreground transition-colors hover:bg-highlight hover:text-highlight-foreground">
+                  {href.startsWith("#") ? (
+                    <a href={href} className="text-sm text-white/60 transition-colors hover:text-[#BDD328]">{label}</a>
+                  ) : (
+                    <Link to={href} className="text-sm text-white/60 transition-colors hover:text-[#BDD328]">{label}</Link>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Right — Social */}
+          <div className="text-center md:text-left">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#BDD328]">Social Media</p>
+            <ul className="mt-5 flex items-center justify-center gap-3 md:justify-start">
+              {socials.map(({ label, href, Icon }) => (
+                <li key={label}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="grid size-10 place-items-center rounded-full bg-white/8 text-white/70 transition-colors hover:bg-[#BDD328] hover:text-[#111111]"
+                  >
                     <Icon className="size-4" />
                   </a>
                 </li>
               ))}
             </ul>
           </div>
-          <FooterLinks title="Navigation" links={[["Home","/"],["Find a Flex","/explore"],["How It Works","/how-it-works"],["Flex an Item","/add-listing"],[isAuthenticated ? "My Account" : "Sign In", isAuthenticated ? "/dashboard" : "/signin"],["Contact","#contact"]]} />
-          <FooterLinks title="Legal" links={[["Terms & Conditions","/terms"],["Privacy Policy","/privacy"],["Cookie Policy","/cookies"]]} />
-          <div>
-            <p className="font-display font-bold">Contact</p>
-            <ul className="mt-4 space-y-3 text-sm text-primary-foreground/60">
-              <li className="flex items-center gap-2"><Mail className="size-4 text-highlight" /><a className="hover:text-highlight" href="mailto:support@flexmystuff.com">support@flexmystuff.com</a></li>
-              <li className="flex items-center gap-2"><Mail className="size-4 text-highlight" /><a className="hover:text-highlight" href="mailto:hello@flexmystuff.com">hello@flexmystuff.com</a></li>
-              <li className="flex items-center gap-2"><Phone className="size-4 text-highlight" /><a className="hover:text-highlight" href="tel:+18005550199">+1 (800) 555-0199</a></li>
-            </ul>
-          </div>
         </div>
-        <div className="mt-12 flex flex-col gap-3 border-t border-primary-foreground/15 pt-6 text-xs text-primary-foreground/50 sm:flex-row sm:justify-between">
+
+        {/* Bottom bar */}
+        <div className="mt-12 flex flex-col items-center gap-3 border-t border-white/10 pt-8 text-xs text-white/40 sm:flex-row sm:justify-between">
           <p>© {new Date().getFullYear()} Flex My Stuff. All Rights Reserved.</p>
           <p>Borrow more. Buy less. Live better.</p>
         </div>
