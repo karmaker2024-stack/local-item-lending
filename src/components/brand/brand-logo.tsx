@@ -1,5 +1,5 @@
-import colorLight from "@/assets/brand-color-light.png";
-import colorDark from "@/assets/brand-color-dark.png";
+import colorLight from "@/assets/brand-color-light-neon.png";
+import colorDark from "@/assets/brand-color-dark-neon.png";
 import monoDark from "@/assets/brand-mono-dark.png";
 import monoLight from "@/assets/brand-mono-light.png";
 import mark from "@/assets/brand-mark.png";
