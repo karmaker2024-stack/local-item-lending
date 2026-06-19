@@ -42,9 +42,161 @@ export function HomePage() {
 
     <Section className="bg-primary text-primary-foreground"><Container><div className="mx-auto max-w-3xl text-center"><h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">{isAuthenticated ? "Ready for Your Next Flex?" : "Ready to Start Flexing?"}</h2><div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">{isAuthenticated ? (<><Button asChild size="lg" variant="highlight"><Link to="/explore">Find a Flex <ArrowRight /></Link></Button><Button asChild size="lg" variant="secondary"><Link to="/add-listing">Flex an Item</Link></Button><Button asChild size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"><Link to="/dashboard">Go to Dashboard</Link></Button></>) : (<><Button asChild size="lg" variant="highlight"><Link to="/explore">Find a Flex <ArrowRight /></Link></Button><Button asChild size="lg" variant="secondary"><Link to="/signup">Create Account</Link></Button></>)}</div></div></Container></Section>
 
-    <footer className="border-t border-border bg-primary py-12 text-primary-foreground"><Container><div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4"><div><Link to="/" aria-label="Flex My Stuff home" className="inline-block rounded-xl focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-highlight/50"><BrandLogo inverse className="h-20" /></Link><p className="mt-4 max-w-xs text-sm leading-6 text-primary-foreground/60">A more useful, connected, and sustainable neighborhood starts with sharing.</p></div><FooterLinks title="Discover" links={[["Explore","/explore"],["Categories","/categories"],["How it works","/how-it-works"]]} /><FooterLinks title="Community" links={[["Our community","/community"],["List an item","/add-listing"],["Your impact","/impact-dashboard"]]} /><div><p className="font-display font-bold">{isAuthenticated ? "Your account" : "Start sharing"}</p><p className="mt-4 text-sm text-primary-foreground/60">{isAuthenticated ? "Manage your listings, rentals, and impact." : "Join neighbors making more of what's already here."}</p>{isAuthenticated ? (<Button asChild className="mt-5" variant="highlight"><Link to="/dashboard">Go to Dashboard</Link></Button>) : (<Button asChild className="mt-5" variant="highlight"><Link to="/signup">Create an account</Link></Button>)}</div></div><div className="mt-12 flex flex-col gap-3 border-t border-primary-foreground/15 pt-6 text-xs text-primary-foreground/50 sm:flex-row sm:justify-between"><p>© 2026 Flex My Stuff</p><p>Borrow more. Buy less. Live better.</p></div></Container></footer>
+    <ContactConnectSection />
+
+    <SiteFooter isAuthenticated={isAuthenticated} />
   </div>;
 }
 
 function SectionHeading({ eyebrow, title, link }: { eyebrow: string; title: string; link: "/explore" | "/categories" }) { return <div className="mb-9 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4"><div className="min-w-0"><p className="text-sm font-bold uppercase tracking-[0.18em] text-secondary">{eyebrow}</p><h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2></div><Button asChild className="hidden sm:inline-flex" variant="ghost"><Link to={link}>View all <ArrowRight /></Link></Button></div>; }
+
+const contactSchema = z.object({
+  name: z.string().trim().min(1, "Please enter your name").max(100),
+  email: z.string().trim().email("Please enter a valid email").max(255),
+  subject: z.string().trim().min(1, "Please add a subject").max(150),
+  message: z.string().trim().min(1, "Please write a message").max(1000),
+});
+
+const socialLinks = [
+  { label: "Facebook", href: "https://facebook.com", Icon: Facebook },
+  { label: "Instagram", href: "https://instagram.com", Icon: Instagram },
+  { label: "X / Twitter", href: "https://x.com", Icon: Twitter },
+  { label: "LinkedIn", href: "https://linkedin.com", Icon: Linkedin },
+  { label: "TikTok", href: "https://tiktok.com", Icon: MessageSquareQuote },
+  { label: "YouTube", href: "https://youtube.com", Icon: Youtube },
+] as const;
+
+function ContactConnectSection() {
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [submitting, setSubmitting] = useState(false);
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const result = contactSchema.safeParse(form);
+    if (!result.success) {
+      toast.error(result.error.issues[0]?.message ?? "Please check the form");
+      return;
+    }
+    setSubmitting(true);
+    setTimeout(() => {
+      setSubmitting(false);
+      setForm({ name: "", email: "", subject: "", message: "" });
+      toast.success("Message sent — we'll get back to you soon.");
+    }, 600);
+  }
+
+  return (
+    <Section id="contact" className="bg-card">
+      <Container>
+        <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-secondary">Contact</p>
+            <h2 className="mt-3 font-display text-4xl font-bold tracking-tight sm:text-5xl">Have a Question?</h2>
+            <p className="mt-5 max-w-xl leading-7 text-muted-foreground">
+              Need help with borrowing, lending, deposits, payments, or anything else? We'd love to hear from you.
+            </p>
+            <form onSubmit={onSubmit} className="mt-8 grid gap-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Full Name" id="contact-name">
+                  <input id="contact-name" type="text" required maxLength={100} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none transition-colors focus:border-highlight focus:ring-2 focus:ring-highlight/30" />
+                </Field>
+                <Field label="Email Address" id="contact-email">
+                  <input id="contact-email" type="email" required maxLength={255} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none transition-colors focus:border-highlight focus:ring-2 focus:ring-highlight/30" />
+                </Field>
+              </div>
+              <Field label="Subject" id="contact-subject">
+                <input id="contact-subject" type="text" required maxLength={150} value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none transition-colors focus:border-highlight focus:ring-2 focus:ring-highlight/30" />
+              </Field>
+              <Field label="Message" id="contact-message">
+                <textarea id="contact-message" required maxLength={1000} rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full resize-y rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-highlight focus:ring-2 focus:ring-highlight/30" />
+              </Field>
+              <div>
+                <Button type="submit" size="lg" variant="highlight" disabled={submitting}>
+                  {submitting ? "Sending…" : (<>Send Message <Send /></>)}
+                </Button>
+              </div>
+            </form>
+          </div>
+
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-secondary">Social</p>
+            <h2 className="mt-3 font-display text-4xl font-bold tracking-tight sm:text-5xl">Connect With Us</h2>
+            <p className="mt-5 leading-7 text-muted-foreground">Follow along for new listings, member stories, and product updates.</p>
+            <ul className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {socialLinks.map(({ label, href, Icon }) => (
+                <li key={label}>
+                  <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="group flex items-center gap-3 rounded-2xl border border-border bg-background p-4 transition-all hover:border-highlight hover:bg-highlight/10 hover:text-highlight-foreground">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-muted text-primary transition-colors group-hover:bg-highlight group-hover:text-highlight-foreground">
+                      <Icon className="size-5" />
+                    </span>
+                    <span className="min-w-0 truncate text-sm font-semibold">{label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10 rounded-2xl border border-border bg-background p-6">
+              <p className="font-display font-bold">Reach us directly</p>
+              <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
+                <li className="flex items-center gap-3"><Mail className="size-4 text-highlight" /><a className="hover:text-foreground" href="mailto:support@flexmystuff.com">support@flexmystuff.com</a></li>
+                <li className="flex items-center gap-3"><Mail className="size-4 text-highlight" /><a className="hover:text-foreground" href="mailto:hello@flexmystuff.com">hello@flexmystuff.com</a></li>
+                <li className="flex items-center gap-3"><Phone className="size-4 text-highlight" /><a className="hover:text-foreground" href="tel:+18005550199">+1 (800) 555-0199</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </Section>
+  );
+}
+
+function Field({ label, id, children }: { label: string; id: string; children: React.ReactNode }) {
+  return (
+    <label htmlFor={id} className="block">
+      <span className="mb-2 block text-sm font-semibold text-foreground">{label}</span>
+      {children}
+    </label>
+  );
+}
+
+function SiteFooter({ isAuthenticated }: { isAuthenticated: boolean }) {
+  return (
+    <footer className="border-t border-border bg-primary py-12 text-primary-foreground">
+      <Container>
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <Link to="/" aria-label="Flex My Stuff home" className="inline-block rounded-xl focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-highlight/50">
+              <BrandLogo inverse className="h-20" />
+            </Link>
+            <p className="mt-4 max-w-xs text-sm leading-6 text-primary-foreground/60">A more useful, connected, and sustainable neighborhood starts with sharing.</p>
+            <ul className="mt-5 flex items-center gap-3">
+              {socialLinks.slice(0, 4).map(({ label, href, Icon }) => (
+                <li key={label}>
+                  <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="grid size-10 place-items-center rounded-xl bg-primary-foreground/8 text-primary-foreground transition-colors hover:bg-highlight hover:text-highlight-foreground">
+                    <Icon className="size-4" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <FooterLinks title="Navigation" links={[["Home","/"],["Find a Flex","/explore"],["How It Works","/how-it-works"],["Flex an Item","/add-listing"],[isAuthenticated ? "My Account" : "Sign In", isAuthenticated ? "/dashboard" : "/signin"],["Contact","#contact"]]} />
+          <FooterLinks title="Legal" links={[["Terms & Conditions","/terms"],["Privacy Policy","/privacy"],["Cookie Policy","/cookies"]]} />
+          <div>
+            <p className="font-display font-bold">Contact</p>
+            <ul className="mt-4 space-y-3 text-sm text-primary-foreground/60">
+              <li className="flex items-center gap-2"><Mail className="size-4 text-highlight" /><a className="hover:text-highlight" href="mailto:support@flexmystuff.com">support@flexmystuff.com</a></li>
+              <li className="flex items-center gap-2"><Mail className="size-4 text-highlight" /><a className="hover:text-highlight" href="mailto:hello@flexmystuff.com">hello@flexmystuff.com</a></li>
+              <li className="flex items-center gap-2"><Phone className="size-4 text-highlight" /><a className="hover:text-highlight" href="tel:+18005550199">+1 (800) 555-0199</a></li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-12 flex flex-col gap-3 border-t border-primary-foreground/15 pt-6 text-xs text-primary-foreground/50 sm:flex-row sm:justify-between">
+          <p>© {new Date().getFullYear()} Flex My Stuff. All Rights Reserved.</p>
+          <p>Borrow more. Buy less. Live better.</p>
+        </div>
+      </Container>
+    </footer>
+  );
+}
+
 function FooterLinks({ title, links }: { title: string; links: readonly [string, string][] }) { return <div><p className="font-display font-bold">{title}</p><ul className="mt-4 space-y-3">{links.map(([label, href]) => <li key={label}><a className="text-sm text-primary-foreground/60 transition-colors hover:text-highlight" href={href}>{label}</a></li>)}</ul></div>; }
