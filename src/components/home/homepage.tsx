@@ -20,9 +20,10 @@ const listings = [
 ];
 
 export function HomePage() {
+  const { isAuthenticated } = useAuth();
   return <div className="min-h-screen overflow-hidden bg-background">
     <SiteHeader />
-    <HeroCarousel />
+    <HeroCarousel isAuthenticated={isAuthenticated} />
 
     
 
