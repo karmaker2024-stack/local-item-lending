@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ThemeProvider } from "../components/theme-provider";
 import { Toaster } from "../components/ui/sonner";
+import { MobileBottomNav } from "../components/navigation/mobile-bottom-nav";
 import brandMark from "../assets/brand-mark.png";
 
 function NotFoundComponent() {
@@ -132,7 +133,8 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <main id="main-content"><Outlet /></main>
+        <main id="main-content" className="pb-16 md:pb-0"><Outlet /></main>
+        <MobileBottomNav />
         <Toaster />
       </ThemeProvider>
     </QueryClientProvider>
