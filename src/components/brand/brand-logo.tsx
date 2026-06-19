@@ -1,8 +1,4 @@
-import colorLight from "@/assets/brand-color-light.png";
-import colorDark from "@/assets/brand-color-dark.png";
-import monoDark from "@/assets/brand-mono-dark.png";
-import monoLight from "@/assets/brand-mono-light.png";
-import mark from "@/assets/brand-mark.png";
+import logoAsset from "@/assets/flex-my-stuff-logo.png.asset.json";
 import { cn } from "@/lib/utils";
 
 type BrandLogoProps = {
@@ -11,20 +7,21 @@ type BrandLogoProps = {
   inverse?: boolean;
 };
 
-export function BrandLogo({ className, compact = false, inverse = false }: BrandLogoProps) {
-  if (compact) {
-    return <img src={mark} alt="" aria-hidden="true" className={cn("h-10 w-auto", className)} />;
-  }
-
-  if (inverse) {
-    return <img src={monoDark} alt="Flex My Stuff" className={cn("h-16 w-auto", className)} />;
-  }
-
+/**
+ * Official Flex My Stuff logo. The uploaded asset is the single source of truth
+ * and must never be recreated, redrawn, recolored, or otherwise altered.
+ * Only proportional resizing and padding are permitted.
+ */
+export function BrandLogo({ className, compact = false, inverse: _inverse = false }: BrandLogoProps) {
   return (
-    <span className={cn("relative block h-14 w-25 shrink-0", className)}>
-      <img src={colorLight} alt="Flex My Stuff" className="h-full w-full object-contain dark:hidden" />
-      <img src={colorDark} alt="Flex My Stuff" className="hidden h-full w-full object-contain dark:block" />
-      <img src={monoLight} alt="" aria-hidden="true" className="hidden" />
-    </span>
+    <img
+      src={logoAsset.url}
+      alt="Flex My Stuff"
+      className={cn(
+        "w-auto object-contain shrink-0",
+        compact ? "h-10" : "h-14",
+        className,
+      )}
+    />
   );
 }
