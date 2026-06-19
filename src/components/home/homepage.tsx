@@ -159,7 +159,7 @@ function Field({ label, id, children }: { label: string; id: string; children: R
 
 import whiteLogoAsset from "@/assets/flex-my-stuff-logo-white.png.asset.json";
 
-function SiteFooter({ isAuthenticated }: { isAuthenticated: boolean }) {
+export function SiteFooter({ isAuthenticated }: { isAuthenticated: boolean }) {
   const quickLinks = [
     { label: "Find a Flex", href: "/explore" },
     { label: "How It Works", href: "/how-it-works" },
