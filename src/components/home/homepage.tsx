@@ -23,7 +23,7 @@ export function HomePage() {
     <SiteHeader />
     <HeroCarousel />
 
-    <div className="bg-primary text-primary-foreground"><Container className="grid grid-cols-3 divide-x divide-primary-foreground/15 py-8 text-center"><Stat value="18,400+" label="Items shared" /><Stat value="$1.2M" label="Money saved" /><Stat value="86t" label="CO₂ saved" highlight /></Container></div>
+    
 
     <Section><Container><SectionHeading eyebrow="Find your thing" title="A little less buying. A lot more doing." link="/categories" /><div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">{categories.map(({ label, icon: Icon }) => <Link key={label} to="/categories" className="premium-lift group rounded-2xl border border-border/70 bg-card p-5 hover:border-highlight"><span className="grid size-11 place-items-center rounded-xl bg-muted text-primary transition-colors group-hover:bg-highlight"><Icon className="size-5" /></span><h3 className="mt-5 font-display text-lg font-bold">{label}</h3><p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">Explore <ChevronRight className="size-3 transition-transform group-hover:translate-x-1" /></p></Link>)}</div></Container></Section>
 
