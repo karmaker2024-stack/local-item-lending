@@ -4,10 +4,9 @@ import {
 } from "lucide-react";
 
 export const publicNavigation = [
-  { label: "Explore", to: "/explore", icon: Compass },
-  { label: "Categories", to: "/categories", icon: Tags },
-  { label: "How it works", to: "/how-it-works", icon: CircleHelp },
-  { label: "Community", to: "/community", icon: Users },
+  { label: "Find a Flex", to: "/explore", icon: Compass },
+  { label: "How It Works", to: "/how-it-works", icon: CircleHelp },
+  { label: "Flex an Item", to: "/add-listing", icon: PlusCircle },
 ] as const;
 
 export const accountNavigation = [
@@ -31,8 +30,8 @@ export const adminNavigation = [
 
 export const mobileNavigation = [
   { label: "Home", to: "/", icon: Home },
-  { label: "Explore", to: "/explore", icon: Compass },
-  { label: "List", to: "/add-listing", icon: PlusCircle },
-  { label: "Rentals", to: "/my-rentals", icon: Tags },
+  { label: "Find", to: "/explore", icon: Compass },
+  { label: "Flex", to: "/add-listing", icon: PlusCircle },
+  { label: "Messages", to: "/messages", icon: MessageCircle },
   { label: "Profile", to: "/profile", icon: UserRound },
 ] as const;
