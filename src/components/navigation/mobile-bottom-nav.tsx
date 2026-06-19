@@ -32,15 +32,14 @@ export function MobileBottomNav() {
       <ul className="grid grid-cols-5">
         {items.map((item) => {
           const Icon = item.icon;
-          const target =
-            "authTo" in item && !isAuthenticated ? item.authTo! : item.to;
+          const target = (item.authTo && !isAuthenticated ? item.authTo : item.to) as string;
           const active = item.exact
             ? pathname === item.to
             : pathname === item.to || pathname.startsWith(item.to + "/");
           return (
             <li key={item.label}>
               <Link
-                to={target}
+                to={target as "/"}
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "flex h-16 flex-col items-center justify-center gap-1 text-[11px] font-semibold transition-colors",
