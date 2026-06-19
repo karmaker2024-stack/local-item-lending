@@ -20,7 +20,11 @@ const slides = [
   { src: projectorHandoff, alt: "Picking up a portable projector", label: "Movie night, sorted" },
 ] as const;
 
-export function HeroCarousel() {
+interface HeroCarouselProps {
+  isAuthenticated?: boolean;
+}
+
+export function HeroCarousel({ isAuthenticated = false }: HeroCarouselProps) {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
@@ -73,8 +77,18 @@ export function HeroCarousel() {
             Rent quality gear and everyday items from verified neighbors. Make more stories with the things already around you.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <Button asChild size="lg" variant="highlight" className="rounded-full px-8"><Link to="/explore">Browse items <ArrowRight /></Link></Button>
-            <Button asChild size="lg" variant="secondary" className="rounded-full px-8"><Link to="/add-listing">List your item</Link></Button>
+            <Button asChild size="lg" variant="highlight" className="rounded-full px-8"><Link to="/explore">Find a Flex <ArrowRight /></Link></Button>
+            {isAuthenticated ? (
+              <>
+                <Button asChild size="lg" variant="secondary" className="rounded-full px-8"><Link to="/add-listing">Flex an Item</Link></Button>
+                <Button asChild size="lg" variant="outline" className="rounded-full border-primary-foreground/30 px-8 text-primary-foreground hover:bg-primary-foreground/10"><Link to="/dashboard">Go to Dashboard</Link></Button>
+              </>
+            ) : (
+              <>
+                <Button asChild size="lg" variant="secondary" className="rounded-full px-8"><Link to="/add-listing">Flex an Item</Link></Button>
+                <Button asChild size="lg" variant="outline" className="rounded-full border-primary-foreground/30 px-8 text-primary-foreground hover:bg-primary-foreground/10"><Link to="/signup">Create Account</Link></Button>
+              </>
+            )}
           </div>
           <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3 text-sm font-bold text-primary-foreground/90">
             <span className="flex items-center gap-2"><CheckCircle2 className="size-4 text-highlight" />Verified neighbors</span>
