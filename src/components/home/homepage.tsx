@@ -164,7 +164,7 @@ function SiteFooter({ isAuthenticated }: { isAuthenticated: boolean }) {
     { label: "Find a Flex", href: "/explore" },
     { label: "How It Works", href: "/how-it-works" },
     { label: "Flex an Item", href: "/add-listing" },
-    { label: "My Account", href: isAuthenticated ? "/dashboard" : "/signin" },
+    { label: "My Account", href: isAuthenticated ? "/dashboard" : "/login" },
     { label: "Contact", href: "#contact" },
   ] as const;
 
