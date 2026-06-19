@@ -1,3 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ExploreMarketplace } from "@/components/explore/explore-marketplace";
-export const Route = createFileRoute("/explore")({ head: () => ({ meta: [{ title: "Explore Nearby Items | Flex My Stuff" }, { name: "description", content: "Browse useful items available to rent near you." }, { property: "og:title", content: "Explore Nearby Items | Flex My Stuff" }, { property: "og:description", content: "Find trusted local tools, gear, and everyday items available to rent." }] }), component: ExploreMarketplace });
+
+export const Route = createFileRoute("/explore")({
+  head: () => ({
+    meta: [
+      { title: "Find a Flex | Flex My Stuff" },
+      { name: "description", content: "Find a Flex near you — search available Flexes by date, location, category, condition, price, and rating." },
+      { property: "og:title", content: "Find a Flex | Flex My Stuff" },
+      { property: "og:description", content: "Browse available Flexes near you. Filter by date, location, condition, price, and rating." },
+    ],
+  }),
+  component: ExploreMarketplace,
+});
