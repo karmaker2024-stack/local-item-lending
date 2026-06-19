@@ -2,24 +2,22 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
 
-import skiShare from "@/assets/hero-ski-share.png";
-import baseballShare from "@/assets/hero-baseball-share.png";
+import cameraHandoff from "@/assets/hero-camera-handoff.jpg";
+import snowboardHandoff from "@/assets/hero-snowboard-handoff.jpg";
+import bicycleHandoff from "@/assets/hero-bicycle-handoff.jpg";
+import powertoolHandoff from "@/assets/hero-powertool-handoff.jpg";
+import campingHandoff from "@/assets/hero-camping-handoff.jpg";
+import projectorHandoff from "@/assets/hero-projector-handoff.jpg";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const slides = [
-  {
-    src: skiShare,
-    alt: "A neighbor lending ski poles to a skier",
-    label: "Adventure gear, shared locally",
-    position: "object-center",
-  },
-  {
-    src: baseballShare,
-    alt: "A neighbor lending a baseball bat to a player",
-    label: "Game day starts next door",
-    position: "object-center",
-  },
+  { src: cameraHandoff, alt: "Neighbors handing off a camera", label: "Capture the moment, borrowed" },
+  { src: snowboardHandoff, alt: "Neighbors passing a snowboard", label: "Adventure gear, shared locally" },
+  { src: bicycleHandoff, alt: "A bicycle being handed over", label: "Get rolling, neighbor to neighbor" },
+  { src: powertoolHandoff, alt: "Picking up a cordless drill", label: "The right tool, right next door" },
+  { src: campingHandoff, alt: "Camping gear exchange", label: "Pack light, borrow local" },
+  { src: projectorHandoff, alt: "Picking up a portable projector", label: "Movie night, sorted" },
 ] as const;
 
 export function HeroCarousel() {
@@ -33,24 +31,13 @@ export function HeroCarousel() {
   const selectSlide = (index: number) => setActive((index + slides.length) % slides.length);
 
   return (
-    <section aria-roledescription="carousel" aria-label="Neighbors sharing useful gear" className="relative overflow-hidden bg-primary text-primary-foreground lg:h-[calc(100svh-5rem)] lg:min-h-[620px] lg:max-h-[820px]">
-      <div className="absolute inset-0 hidden lg:block">
-        {slides.map((slide, index) => (
-          <img
-            key={`wash-${slide.src}`}
-            src={slide.src}
-            alt=""
-            aria-hidden="true"
-            className={cn(
-              "absolute inset-0 size-full scale-105 object-cover object-center opacity-35 blur-sm transition-opacity duration-1000 ease-out",
-              index === active ? "opacity-35" : "opacity-0",
-            )}
-          />
-        ))}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/82 to-primary/20" />
-      </div>
-
-      <div className="relative aspect-[941/900] w-full bg-primary sm:aspect-[941/820] lg:absolute lg:inset-y-0 lg:right-0 lg:w-[68vw] lg:max-w-[920px] lg:aspect-auto lg:bg-transparent">
+    <section
+      aria-roledescription="carousel"
+      aria-label="Neighbors sharing useful gear"
+      className="relative isolate overflow-hidden bg-primary text-primary-foreground min-h-[640px] lg:h-[calc(100svh-5rem)] lg:min-h-[640px] lg:max-h-[860px]"
+    >
+      {/* Full-bleed photo layer */}
+      <div className="absolute inset-0">
         {slides.map((slide, index) => (
           <img
             key={slide.src}
@@ -58,25 +45,31 @@ export function HeroCarousel() {
             alt={index === active ? slide.alt : ""}
             aria-hidden={index !== active}
             fetchPriority={index === 0 ? "high" : "auto"}
+            loading={index === 0 ? "eager" : "lazy"}
+            width={1920}
+            height={1080}
             className={cn(
-              "absolute inset-0 size-full object-contain object-center transition-all duration-1000 ease-out lg:object-contain lg:object-right",
-              slide.position,
-              index === active ? "scale-100 opacity-100" : "scale-[1.03] opacity-0",
+              "absolute inset-0 size-full object-cover object-center transition-all duration-[1200ms] ease-out",
+              index === active ? "scale-100 opacity-100" : "scale-[1.04] opacity-0",
             )}
           />
         ))}
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-primary via-primary/45 to-transparent lg:inset-y-0 lg:left-0 lg:right-auto lg:h-auto lg:w-1/2 lg:bg-gradient-to-r lg:from-primary lg:via-primary/75 lg:to-transparent" />
+        {/* Readability gradients */}
+        <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/70 to-primary/10 lg:hidden" />
+        <div className="absolute inset-0 hidden bg-gradient-to-r from-primary via-primary/80 to-transparent lg:block" />
+        <div className="absolute inset-0 hidden bg-gradient-to-t from-primary/60 via-transparent to-transparent lg:block" />
       </div>
 
-      <div className="relative z-10 mx-auto -mt-28 flex w-full max-w-7xl px-4 pb-28 pt-0 sm:-mt-36 sm:px-6 sm:pb-32 lg:mt-0 lg:h-full lg:items-center lg:px-8 lg:py-20">
+      {/* Text content */}
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-7xl items-end px-4 pb-24 pt-72 sm:px-6 sm:pb-28 sm:pt-80 lg:items-center lg:px-8 lg:py-20">
         <div className="max-w-2xl lg:w-[55%] lg:max-w-none xl:w-[52%]">
-          <p className="mb-5 inline-flex rounded-full border border-primary-foreground/25 bg-primary-foreground/8 px-4 py-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] sm:text-xs">
+          <p className="mb-5 inline-flex rounded-full border border-primary-foreground/25 bg-primary-foreground/10 px-4 py-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] backdrop-blur-sm sm:text-xs">
             {slides[active].label}
           </p>
-          <h1 className="max-w-[8.5ch] text-5xl font-extrabold leading-[0.94] tracking-[-0.05em] text-primary-foreground sm:text-6xl lg:text-7xl xl:text-[5rem]">
+          <h1 className="max-w-[8.5ch] text-5xl font-extrabold leading-[0.94] tracking-[-0.05em] text-primary-foreground drop-shadow-[0_2px_12px_rgba(0,0,0,0.25)] sm:text-6xl lg:text-7xl xl:text-[5rem]">
             Borrow more.<br /><span className="text-highlight">Buy less.</span>
           </h1>
-          <p className="mt-6 max-w-xl text-base font-semibold leading-7 text-primary-foreground/85 sm:text-xl sm:leading-8">
+          <p className="mt-6 max-w-xl text-base font-semibold leading-7 text-primary-foreground/90 sm:text-xl sm:leading-8">
             Rent quality gear and everyday items from verified neighbors. Make more stories with the things already around you.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
