@@ -4,13 +4,21 @@ import { Compass, Home, MessageCircle, PlusCircle, UserRound } from "lucide-reac
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 
-const items = [
+type NavItem = {
+  label: string;
+  to: string;
+  icon: typeof Home;
+  exact?: boolean;
+  authTo?: string;
+};
+
+const items: NavItem[] = [
   { label: "Home", to: "/", icon: Home, exact: true },
   { label: "Find", to: "/explore", icon: Compass },
   { label: "Flex", to: "/add-listing", icon: PlusCircle },
   { label: "Messages", to: "/messages", icon: MessageCircle, authTo: "/login" },
   { label: "Account", to: "/dashboard", icon: UserRound, authTo: "/login" },
-] as const;
+];
 
 export function MobileBottomNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
