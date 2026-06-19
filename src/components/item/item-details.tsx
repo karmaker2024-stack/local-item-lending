@@ -5,18 +5,24 @@ import {
   BadgeCheck,
   CalendarDays,
   Camera,
+  CalendarClock,
   Check,
   ChevronRight,
   Clock3,
+  CreditCard,
   Heart,
+  Info,
   Leaf,
+  Lock,
   MapPin,
   MessageCircle,
   PackageCheck,
+  Repeat,
   Share2,
   ShieldCheck,
   Sparkles,
   Star,
+  UserCheck,
 } from "lucide-react";
 
 import drillMain from "@/assets/listing-drill.jpg";
@@ -35,6 +41,8 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const gallery = [
   { src: drillMain, alt: "Cordless drill kit on a workbench" },
@@ -58,37 +66,51 @@ const reviews = [
 const blockedDates = [new Date(2026, 5, 16), new Date(2026, 5, 17), new Date(2026, 5, 25), new Date(2026, 5, 26)];
 const formatShort = (date?: Date) => date ? new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(date) : "Add date";
 
+const timeOptions = Array.from({ length: 28 }, (_, i) => {
+  const totalMins = 7 * 60 + i * 30;
+  const h24 = Math.floor(totalMins / 60);
+  const m = totalMins % 60;
+  const period = h24 >= 12 ? "PM" : "AM";
+  const h12 = ((h24 + 11) % 12) + 1;
+  return `${h12}:${m === 0 ? "00" : m} ${period}`;
+});
+
+const DEPOSIT = 100;
+const DAILY = 12;
+
+type RecurrenceMode = "one-time" | "recurring";
+type RecurrenceFreq = "daily" | "weekly" | "monthly";
+
 export function ItemDetails() {
   const [saved, setSaved] = useState(false);
   const [reserved, setReserved] = useState(false);
   const [range, setRange] = useState<DateRange | undefined>({ from: new Date(2026, 5, 20), to: new Date(2026, 5, 22) });
+  const [pickupTime, setPickupTime] = useState("9:00 AM");
+  const [returnTime, setReturnTime] = useState("6:00 PM");
+  const [recurrence, setRecurrence] = useState<RecurrenceMode>("one-time");
+  const [frequency, setFrequency] = useState<RecurrenceFreq>("weekly");
+
   const days = useMemo(() => {
     if (!range?.from || !range.to) return 1;
     return Math.max(1, Math.round((range.to.getTime() - range.from.getTime()) / 86_400_000) + 1);
   }, [range]);
-  const rental = days * 12;
+  const rental = days * DAILY;
   const fee = Math.max(4, Math.round(rental * 0.12));
-  const total = rental + fee;
+  const tax = Math.round(rental * 0.07);
+  const total = rental + fee + tax;
 
-  const chooseDates = (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline" className="h-auto w-full justify-start rounded-xl px-4 py-3 text-left">
-          <CalendarDays className="size-5 text-primary" />
-          <span className="grid flex-1 grid-cols-2 gap-3">
-            <span><span className="block text-[.65rem] font-bold uppercase tracking-wider text-muted-foreground">Start</span>{formatShort(range?.from)}</span>
-            <span className="border-l border-border pl-3"><span className="block text-[.65rem] font-bold uppercase tracking-wider text-muted-foreground">End</span>{formatShort(range?.to)}</span>
-          </span>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent align="end" className="w-auto p-0">
-        <Calendar mode="range" selected={range} onSelect={setRange} disabled={[{ before: new Date(2026, 5, 13) }, ...blockedDates]} defaultMonth={new Date(2026, 5, 1)} className="pointer-events-auto p-3" />
-      </PopoverContent>
-    </Popover>
-  );
+  const widgetProps = {
+    range, setRange,
+    pickupTime, setPickupTime,
+    returnTime, setReturnTime,
+    recurrence, setRecurrence,
+    frequency, setFrequency,
+    days, rental, fee, tax, total,
+    reserved, onReserve: () => setReserved(true),
+  };
 
   return (
-    <div className="min-h-screen bg-background pb-24 lg:pb-0">
+    <div className="min-h-screen bg-background pb-40 lg:pb-0">
       <SiteHeader />
       <Container className="py-5 sm:py-8">
         <nav aria-label="Breadcrumb" className="mb-5 flex items-center gap-2 text-sm text-muted-foreground">
@@ -113,7 +135,7 @@ export function ItemDetails() {
 
         <Gallery />
 
-        <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_23rem] lg:gap-16">
+        <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-16">
           <div className="min-w-0">
             <section className="border-b border-border pb-9">
               <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-5">
@@ -122,7 +144,7 @@ export function ItemDetails() {
               </div>
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
                 <Feature icon={PackageCheck} title="Complete kit" text="Drill, 2 batteries & 30 bits" />
-                <Feature icon={ShieldCheck} title="Damage protection" text="Included in your booking" />
+                <Feature icon={ShieldCheck} title="Deposit hold protection" text="Refunded after safe return" />
                 <Feature icon={MapPin} title="Easy pickup" text="Exact address after booking" />
               </div>
               <p className="mt-7 leading-7 text-muted-foreground">A powerful, lightweight 20V cordless drill for shelves, furniture assembly, repairs, and everyday DIY. Both batteries are fully charged before pickup, and the hard case keeps the full kit organized.</p>
@@ -136,8 +158,9 @@ export function ItemDetails() {
             <Impact />
           </div>
 
-          <aside id="reserve" className="sticky top-24 hidden lg:block">
-            <ReserveCard range={range} days={days} rental={rental} fee={fee} total={total} chooseDates={chooseDates} reserved={reserved} onReserve={() => setReserved(true)} />
+          <aside id="reserve" className="sticky top-24 hidden space-y-5 lg:block">
+            <FlexBookingWidget {...widgetProps} />
+            <TrustSafety />
           </aside>
         </div>
 
@@ -146,8 +169,18 @@ export function ItemDetails() {
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 backdrop-blur-xl lg:hidden">
         <Container className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-0">
-          <p className="min-w-0"><strong className="text-xl">$12</strong><span className="text-sm text-muted-foreground"> / day</span><span className="block truncate text-xs text-muted-foreground">{formatShort(range?.from)} – {formatShort(range?.to)} · ${total} total</span></p>
-          <Dialog><DialogTrigger asChild><Button variant="highlight" size="lg">Reserve</Button></DialogTrigger><DialogContent className="max-h-[92dvh] overflow-y-auto rounded-3xl"><DialogTitle className="text-2xl">Reserve this item</DialogTitle><ReserveCard range={range} days={days} rental={rental} fee={fee} total={total} chooseDates={chooseDates} reserved={reserved} onReserve={() => setReserved(true)} mobile /></DialogContent></Dialog>
+          <div className="min-w-0">
+            <p><strong className="text-xl">${DAILY}</strong><span className="text-sm text-muted-foreground"> / day</span></p>
+            <p className="truncate text-xs text-muted-foreground">Due today ${total} · ${DEPOSIT} deposit held</p>
+          </div>
+          <Dialog>
+            <DialogTrigger asChild><Button variant="highlight" size="lg">Request Flex</Button></DialogTrigger>
+            <DialogContent className="max-h-[92dvh] overflow-y-auto rounded-3xl">
+              <DialogTitle className="text-2xl">Request a Flex</DialogTitle>
+              <FlexBookingWidget {...widgetProps} mobile />
+              <TrustSafety />
+            </DialogContent>
+          </Dialog>
         </Container>
       </div>
     </div>
@@ -166,12 +199,149 @@ function Feature({ icon: Icon, title, text }: { icon: typeof PackageCheck; title
 
 function OwnerSection() { return <section className="border-b border-border py-10"><p className="text-xs font-bold uppercase tracking-[.18em] text-secondary">Meet your owner</p><div className="mt-5 flex flex-col gap-6 sm:flex-row sm:items-start"><Avatar className="size-24"><AvatarImage src={ownerMaya} alt="Maya" /><AvatarFallback>MY</AvatarFallback></Avatar><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h2 className="text-2xl font-bold">Maya R.</h2><BadgeCheck className="size-5 text-accent" /></div><p className="mt-1 text-sm text-muted-foreground">Oakwood neighbor · Member since 2023</p><div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm"><span className="flex items-center gap-1.5 font-semibold"><Star className="size-4 fill-highlight text-highlight-foreground" />4.9 owner rating</span><span className="flex items-center gap-1.5"><Clock3 className="size-4 text-muted-foreground" />Responds within 20 min</span></div><div className="mt-4 flex flex-wrap gap-2"><Badge variant="outline"><BadgeCheck className="mr-1 size-3.5" />Identity verified</Badge><Badge variant="outline"><ShieldCheck className="mr-1 size-3.5" />Phone verified</Badge><Badge variant="outline"><Sparkles className="mr-1 size-3.5" />Top lender</Badge></div><Button variant="outline" className="mt-5"><MessageCircle />Message Maya</Button></div></div></section>; }
 
-function Availability({ range, setRange }: { range: DateRange | undefined; setRange: (range: DateRange | undefined) => void }) { return <section className="border-b border-border py-10"><div className="flex items-end justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-secondary">Availability</p><h2 className="mt-2 text-2xl font-bold">Choose your dates</h2></div><span className="hidden text-sm text-muted-foreground sm:block">Unavailable dates are faded</span></div><div className="mt-6 overflow-x-auto rounded-2xl border border-border bg-card p-2"><Calendar mode="range" selected={range} onSelect={setRange} disabled={[{ before: new Date(2026, 5, 13) }, ...blockedDates]} defaultMonth={new Date(2026, 5, 1)} className="pointer-events-auto mx-auto [--cell-size:2.55rem]" /></div></section>; }
+function Availability({ range, setRange }: { range: DateRange | undefined; setRange: (range: DateRange | undefined) => void }) { return <section className="border-b border-border py-10"><div className="flex items-end justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-secondary">Availability</p><h2 className="mt-2 text-2xl font-bold">Choose your Flex dates</h2></div><span className="hidden text-sm text-muted-foreground sm:block">Unavailable dates are faded</span></div><div className="mt-6 overflow-x-auto rounded-2xl border border-border bg-card p-2"><Calendar mode="range" selected={range} onSelect={setRange} disabled={[{ before: new Date(2026, 5, 13) }, ...blockedDates]} defaultMonth={new Date(2026, 5, 1)} className="pointer-events-auto mx-auto [--cell-size:2.55rem]" /></div></section>; }
 
 function Reviews() { return <section id="reviews" className="scroll-mt-24 border-b border-border py-10"><div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-secondary">Community reviews</p><h2 className="mt-2 flex items-center gap-2 text-2xl font-bold"><Star className="size-5 fill-highlight text-highlight-foreground" />4.9 · 32 reviews</h2></div><Button variant="outline">See all reviews</Button></div><div className="mt-7 grid gap-7 sm:grid-cols-2">{reviews.slice(0,2).map((review) => <article key={review.name}><div className="flex items-center gap-3"><Avatar><AvatarFallback className="bg-highlight/30 font-bold">{review.initials}</AvatarFallback></Avatar><div><h3 className="font-bold">{review.name}</h3><p className="text-xs text-muted-foreground">{review.date}</p></div></div><div className="mt-3 flex gap-0.5" aria-label="5 out of 5 stars">{Array.from({ length: 5 }).map((_, i) => <Star key={i} className="size-3.5 fill-highlight text-highlight-foreground" />)}</div><p className="mt-3 text-sm leading-6 text-muted-foreground">{review.text}</p></article>)}</div></section>; }
 
-function Impact() { return <section className="py-10"><div className="overflow-hidden rounded-3xl bg-primary p-7 text-primary-foreground sm:p-9"><div className="grid items-center gap-7 sm:grid-cols-[minmax(0,1fr)_auto]"><div><span className="inline-flex size-11 items-center justify-center rounded-2xl bg-highlight text-highlight-foreground"><Leaf /></span><p className="mt-5 text-xs font-bold uppercase tracking-[.18em] text-highlight">Sustainability impact</p><h2 className="mt-2 text-2xl font-bold">One rental. Less waste.</h2><p className="mt-3 max-w-xl text-sm leading-6 text-primary-foreground/75">Borrowing this drill instead of buying new helps keep useful equipment in circulation and reduces demand for resource-heavy manufacturing.</p></div><div className="grid grid-cols-2 gap-3 text-center"><div className="rounded-2xl bg-primary-foreground/10 p-5"><strong className="block text-2xl text-highlight">8.2 kg</strong><span className="text-xs text-primary-foreground/70">CO₂ avoided</span></div><div className="rounded-2xl bg-primary-foreground/10 p-5"><strong className="block text-2xl text-highlight">$76</strong><span className="text-xs text-primary-foreground/70">saved vs. buying</span></div></div></div></div></section>; }
+function Impact() { return <section className="py-10"><div className="overflow-hidden rounded-3xl bg-primary p-7 text-primary-foreground sm:p-9"><div className="grid items-center gap-7 sm:grid-cols-[minmax(0,1fr)_auto]"><div><span className="inline-flex size-11 items-center justify-center rounded-2xl bg-highlight text-highlight-foreground"><Leaf /></span><p className="mt-5 text-xs font-bold uppercase tracking-[.18em] text-highlight">Sustainability impact</p><h2 className="mt-2 text-2xl font-bold">One Flex. Less waste.</h2><p className="mt-3 max-w-xl text-sm leading-6 text-primary-foreground/75">Flexing this drill instead of buying new keeps useful equipment in circulation and reduces demand for resource-heavy manufacturing.</p></div><div className="grid grid-cols-2 gap-3 text-center"><div className="rounded-2xl bg-primary-foreground/10 p-5"><strong className="block text-2xl text-highlight">8.2 kg</strong><span className="text-xs text-primary-foreground/70">CO₂ avoided</span></div><div className="rounded-2xl bg-primary-foreground/10 p-5"><strong className="block text-2xl text-highlight">$76</strong><span className="text-xs text-primary-foreground/70">saved vs. buying</span></div></div></div></div></section>; }
 
-function ReserveCard({ days, rental, fee, total, chooseDates, reserved, onReserve, mobile = false }: { range: DateRange | undefined; days: number; rental: number; fee: number; total: number; chooseDates: React.ReactNode; reserved: boolean; onReserve: () => void; mobile?: boolean }) { return <div className={mobile ? "" : "rounded-3xl border border-border bg-card p-6 shadow-marketplace"}><div className="flex items-end justify-between"><p><strong className="text-2xl">$12</strong><span className="text-sm text-muted-foreground"> / day</span></p><span className="flex items-center gap-1 text-sm font-semibold"><Star className="size-4 fill-highlight text-highlight-foreground" />4.9</span></div><div className="mt-5">{chooseDates}</div><div className="mt-6 space-y-3 text-sm"><div className="flex justify-between"><span className="text-muted-foreground">$12 × {days} days</span><span>${rental}</span></div><div className="flex justify-between"><span className="text-muted-foreground">Community protection fee</span><span>${fee}</span></div><div className="border-t border-border pt-3 font-bold"><div className="flex justify-between"><span>Total</span><span>${total}</span></div></div></div><Button onClick={onReserve} disabled={reserved} variant="highlight" size="lg" className="mt-6 w-full">{reserved ? <><Check />Request sent</> : "Reserve for these dates"}</Button><p className="mt-3 text-center text-xs text-muted-foreground">You won’t be charged until Maya accepts.</p><div className="mt-5 flex items-start gap-3 rounded-xl bg-muted/70 p-3 text-xs text-muted-foreground"><ShieldCheck className="mt-0.5 size-4 shrink-0 text-success" /><span>Every booking includes community protection and secure payments.</span></div></div>; }
+type WidgetProps = {
+  range: DateRange | undefined; setRange: (r: DateRange | undefined) => void;
+  pickupTime: string; setPickupTime: (v: string) => void;
+  returnTime: string; setReturnTime: (v: string) => void;
+  recurrence: RecurrenceMode; setRecurrence: (v: RecurrenceMode) => void;
+  frequency: RecurrenceFreq; setFrequency: (v: RecurrenceFreq) => void;
+  days: number; rental: number; fee: number; tax: number; total: number;
+  reserved: boolean; onReserve: () => void;
+  mobile?: boolean;
+};
+
+function FlexBookingWidget(props: WidgetProps) {
+  const { range, setRange, pickupTime, setPickupTime, returnTime, setReturnTime, recurrence, setRecurrence, frequency, setFrequency, days, rental, fee, tax, total, reserved, onReserve, mobile } = props;
+  return (
+    <div className={mobile ? "space-y-6" : "rounded-3xl border border-border bg-card p-6 shadow-marketplace"}>
+      <div className="flex items-end justify-between">
+        <p><strong className="text-2xl">${DAILY}</strong><span className="text-sm text-muted-foreground"> / day</span></p>
+        <span className="flex items-center gap-1 text-sm font-semibold"><Star className="size-4 fill-highlight text-highlight-foreground" />4.9</span>
+      </div>
+
+      <div className="mt-5">
+        <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Flex Details</p>
+        <div className="grid grid-cols-2 gap-2">
+          <DateField label="Pickup date" value={range?.from} onPick={(d) => setRange({ from: d, to: range?.to })} />
+          <DateField label="Return date" value={range?.to} onPick={(d) => setRange({ from: range?.from, to: d })} />
+          <TimeField label="Pickup time" value={pickupTime} onChange={setPickupTime} />
+          <TimeField label="Return time" value={returnTime} onChange={setReturnTime} />
+        </div>
+      </div>
+
+      <div className="mt-5 rounded-2xl border border-border p-4">
+        <p className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground"><Repeat className="size-3.5" />Flex schedule</p>
+        <div className="grid grid-cols-2 gap-2">
+          <RadioPill checked={recurrence === "one-time"} onClick={() => setRecurrence("one-time")} label="One-Time Flex" />
+          <RadioPill checked={recurrence === "recurring"} onClick={() => setRecurrence("recurring")} label="Recurring Flex" />
+        </div>
+        {recurrence === "recurring" && (
+          <div className="mt-3">
+            <Label htmlFor="freq" className="text-xs text-muted-foreground">Repeat</Label>
+            <Select value={frequency} onValueChange={(v) => setFrequency(v as RecurrenceFreq)}>
+              <SelectTrigger id="freq" className="mt-1.5"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="daily">Daily</SelectItem>
+                <SelectItem value="weekly">Weekly</SelectItem>
+                <SelectItem value="monthly">Monthly</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+      </div>
+
+      <div className="mt-6 space-y-2.5 text-sm">
+        <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Cost breakdown</p>
+        <Row label={`Rental cost ($${DAILY} × ${days} days)`} value={`$${rental}`} />
+        <Row label="Service fee" value={`$${fee}`} />
+        <Row label="Taxes" value={`$${tax}`} />
+        <div className="flex items-center justify-between border-t border-border pt-3 text-base font-bold"><span>Total Due Today</span><span>${total}</span></div>
+        <div className="mt-2 flex items-center justify-between rounded-xl bg-muted/70 p-3 text-sm"><span className="flex items-center gap-2 font-semibold"><Lock className="size-4 text-primary" />Deposit Held</span><span className="font-bold">${DEPOSIT}</span></div>
+      </div>
+
+      <div className="mt-4 rounded-2xl border-l-4 border-accent bg-accent/10 p-4 text-sm">
+        <p className="flex items-center gap-2 font-bold"><Info className="size-4 text-accent" />Deposit Hold</p>
+        <p className="mt-1.5 leading-5 text-muted-foreground">The deposit amount is temporarily held on your payment method and is <strong className="text-foreground">not charged</strong> unless the item is returned damaged, lost, or significantly late. The hold is released after a successful return.</p>
+      </div>
+
+      <Button onClick={onReserve} disabled={reserved} variant="highlight" size="lg" className="mt-5 w-full">
+        {reserved ? <><Check />Flex requested</> : "Request Flex"}
+      </Button>
+      <p className="mt-3 text-center text-xs text-muted-foreground">You won’t be charged until Maya accepts your Flex request.</p>
+    </div>
+  );
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return <div className="flex justify-between"><span className="text-muted-foreground">{label}</span><span>{value}</span></div>;
+}
+
+function RadioPill({ checked, onClick, label }: { checked: boolean; onClick: () => void; label: string }) {
+  return (
+    <button type="button" onClick={onClick} aria-pressed={checked} className={`flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-semibold transition ${checked ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}>
+      <span className={`grid size-4 place-items-center rounded-full border-2 ${checked ? "border-primary" : "border-muted-foreground/40"}`}>
+        {checked && <span className="size-2 rounded-full bg-primary" />}
+      </span>
+      {label}
+    </button>
+  );
+}
+
+function DateField({ label, value, onPick }: { label: string; value?: Date; onPick: (d: Date) => void }) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button type="button" className="flex flex-col items-start rounded-xl border border-border px-3 py-2.5 text-left hover:border-primary/40">
+          <span className="text-[.65rem] font-bold uppercase tracking-wider text-muted-foreground">{label}</span>
+          <span className="mt-0.5 flex items-center gap-1.5 text-sm font-semibold"><CalendarDays className="size-4 text-primary" />{formatShort(value)}</span>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="start" className="w-auto p-0">
+        <Calendar mode="single" selected={value} onSelect={(d) => d && onPick(d)} disabled={[{ before: new Date(2026, 5, 13) }, ...blockedDates]} defaultMonth={value ?? new Date(2026, 5, 1)} className="pointer-events-auto p-3" />
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function TimeField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+  return (
+    <div className="rounded-xl border border-border px-3 py-2 hover:border-primary/40">
+      <Label className="text-[.65rem] font-bold uppercase tracking-wider text-muted-foreground">{label}</Label>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="mt-0.5 h-auto border-0 p-0 shadow-none focus:ring-0 [&>svg]:hidden">
+          <span className="flex items-center gap-1.5 text-sm font-semibold"><CalendarClock className="size-4 text-primary" /><SelectValue /></span>
+        </SelectTrigger>
+        <SelectContent className="max-h-72">
+          {timeOptions.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
+function TrustSafety() {
+  const items = [
+    { icon: CreditCard, label: "Secure Online Payments" },
+    { icon: ShieldCheck, label: "Deposit Hold Protection" },
+    { icon: UserCheck, label: "Verified Member Profiles" },
+    { icon: CalendarClock, label: "Flexible Pickup & Return Scheduling" },
+  ];
+  return (
+    <div className="rounded-3xl border border-border bg-card p-5">
+      <p className="text-xs font-bold uppercase tracking-[.18em] text-secondary">Trust & safety</p>
+      <ul className="mt-3 grid gap-2.5 text-sm">
+        {items.map(({ icon: Icon, label }) => (
+          <li key={label} className="flex items-center gap-2.5"><Check className="size-4 text-success" /><Icon className="size-4 text-muted-foreground" /><span className="font-medium">{label}</span></li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 function RelatedListings() { return <section className="border-t border-border py-12"><div className="flex items-end justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-secondary">Keep exploring</p><h2 className="mt-2 text-2xl font-bold sm:text-3xl">More useful things nearby</h2></div><Button asChild variant="ghost"><Link to="/explore">View all <ChevronRight /></Link></Button></div><div className="mt-7 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">{related.map((item) => <article key={item.id} className="group"><Link to="/item/$id" params={{ id: item.id }}><img src={item.image} alt={item.title} width={768} height={768} loading="lazy" className="aspect-[4/3] w-full rounded-2xl object-cover transition-transform duration-300 group-hover:scale-[1.01]" /><div className="mt-4 flex items-start justify-between gap-3"><div className="min-w-0"><h3 className="truncate text-lg font-bold group-hover:underline group-hover:decoration-highlight">{item.title}</h3><p className="mt-1 text-sm text-muted-foreground">{item.distance} mi away</p></div><span className="flex shrink-0 items-center gap-1 text-sm"><Star className="size-4 fill-highlight text-highlight-foreground" />{item.rating}</span></div><p className="mt-2"><strong>${item.price}</strong><span className="text-sm text-muted-foreground"> / day</span></p></Link></article>)}</div></section>; }
