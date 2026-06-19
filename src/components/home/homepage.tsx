@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Camera, ChevronRight, CircleDollarSign, Gamepad2, Heart, Leaf, ShieldCheck, Star, TentTree, Trophy, Wrench, Zap } from "lucide-react";
+import { ArrowRight, Camera, ChevronRight, CircleDollarSign, Gamepad2, Heart, Leaf, MessageSquareQuote, PencilLine, ShieldCheck, Star, TentTree, Trophy, Wrench, Zap } from "lucide-react";
 import drillImage from "@/assets/listing-drill.jpg";
 import campingImage from "@/assets/listing-camping.jpg";
 import cameraImage from "@/assets/listing-camera.jpg";
