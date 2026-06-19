@@ -15,7 +15,7 @@ export function SiteHeader() {
         </Link>
         <nav aria-label="Primary navigation" className="hidden items-center gap-8 md:flex">
           {publicNavigation.map(({ label, to }) => <Link key={to} to={to} activeProps={{ className: "text-foreground after:scale-x-100" }} inactiveProps={{ className: "text-muted-foreground" }} className="relative py-2 text-sm font-bold transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:origin-left after:scale-x-0 after:rounded-full after:bg-highlight after:transition-transform hover:text-foreground hover:after:scale-x-100">{label}</Link>)}
-          <Button asChild size="sm" className="rounded-full px-5"><Link to="/add-listing"><Plus />List an item</Link></Button>
+          <Button asChild size="sm" className="rounded-full px-5"><Link to="/add-listing"><Plus />Flex an item</Link></Button>
         </nav>
         <Button asChild aria-label="Open account" className="md:hidden" size="icon" variant="ghost"><Link to="/dashboard"><UserRound /></Link></Button>
       </Container>
