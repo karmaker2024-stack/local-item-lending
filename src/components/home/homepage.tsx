@@ -12,10 +12,10 @@ import { Button } from "@/components/ui/button";
 
 const categories = [{ label: "Tools", icon: Wrench }, { label: "Electronics", icon: Zap }, { label: "Camping", icon: TentTree }, { label: "Photography", icon: Camera }, { label: "Sports", icon: Trophy }, { label: "Events", icon: Gamepad2 }];
 const listings = [
-  { id: "cordless-drill-kit", title: "Cordless drill kit", image: drillImage, price: "$12", location: "0.8 mi", rating: "4.9", owner: "Maya" },
-  { id: "camping-tent", title: "4-person camping set", image: campingImage, price: "$24", location: "1.2 mi", rating: "5.0", owner: "Jon" },
-  { id: "mirrorless-camera", title: "Mirrorless camera kit", image: cameraImage, price: "$38", location: "1.6 mi", rating: "4.8", owner: "Priya" },
-  { id: "stand-mixer", title: "Professional stand mixer", image: mixerImage, price: "$16", location: "2.1 mi", rating: "4.9", owner: "Alex" },
+  { id: "cordless-drill-kit", title: "Cordless drill kit", image: drillImage, price: "$12", location: "0.8 mi" },
+  { id: "camping-tent", title: "4-person camping set", image: campingImage, price: "$24", location: "1.2 mi" },
+  { id: "mirrorless-camera", title: "Mirrorless camera kit", image: cameraImage, price: "$38", location: "1.6 mi" },
+  { id: "stand-mixer", title: "Professional stand mixer", image: mixerImage, price: "$16", location: "2.1 mi" },
 ];
 
 export function HomePage() {
