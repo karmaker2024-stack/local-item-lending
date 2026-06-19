@@ -81,12 +81,12 @@ export function HeroCarousel({ isAuthenticated = false }: HeroCarouselProps) {
             {isAuthenticated ? (
               <>
                 <Button asChild size="lg" variant="secondary" className="rounded-full px-8"><Link to="/add-listing">Flex an Item</Link></Button>
-                <Button asChild size="lg" variant="outline" className="rounded-full border-primary-foreground/30 px-8 text-primary-foreground hover:bg-primary-foreground/10"><Link to="/dashboard">Go to Dashboard</Link></Button>
+                <Button asChild size="lg" variant="outline" className="rounded-full border-primary-foreground/40 bg-transparent px-8 text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground"><Link to="/dashboard">Go to Dashboard</Link></Button>
               </>
             ) : (
               <>
                 <Button asChild size="lg" variant="secondary" className="rounded-full px-8"><Link to="/add-listing">Flex an Item</Link></Button>
-                <Button asChild size="lg" variant="outline" className="rounded-full border-primary-foreground/30 px-8 text-primary-foreground hover:bg-primary-foreground/10"><Link to="/signup">Create Account</Link></Button>
+                <Button asChild size="lg" variant="outline" className="rounded-full border-primary-foreground/40 bg-transparent px-8 text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground"><Link to="/signup">Create Account</Link></Button>
               </>
             )}
           </div>
