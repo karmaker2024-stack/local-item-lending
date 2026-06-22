@@ -349,6 +349,18 @@ function Filters(props: FilterProps) {
           />
         ))}
       </FilterGroup>
+
+      <FilterGroup title="Sort by">
+        <Select value={props.sort} onValueChange={props.setSort}>
+          <SelectTrigger className="min-h-11 bg-card"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="recommended">Recommended</SelectItem>
+            <SelectItem value="distance">Nearest first</SelectItem>
+            <SelectItem value="price-low">Price: low to high</SelectItem>
+            <SelectItem value="rating">Highest rated</SelectItem>
+          </SelectContent>
+        </Select>
+      </FilterGroup>
     </div>
   );
 }
