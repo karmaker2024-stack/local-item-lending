@@ -133,6 +133,7 @@ export function ExploreMarketplace() {
     price, setPrice,
     condition, setCondition,
     ratings, setRatings,
+    sort, setSort,
   };
 
   return (
@@ -191,12 +192,12 @@ export function ExploreMarketplace() {
               {loading ? "Finding the best local Flexes…" : `${results.length} ${results.length === 1 ? "Flex" : "Flexes"} match your search`}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="sticky top-[7.5rem] z-30 -mx-4 flex items-center gap-2 border-b border-border/60 bg-background/95 px-4 py-2 backdrop-blur lg:static lg:mx-0 lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
             <MobileFilters activeFilters={activeChips.length} clearFilters={clearFilters}>
               <Filters {...filterProps} />
             </MobileFilters>
             <Select value={sort} onValueChange={setSort}>
-              <SelectTrigger aria-label="Sort Flexes" className="hidden min-h-11 w-44 bg-card sm:flex"><SelectValue /></SelectTrigger>
+              <SelectTrigger aria-label="Sort Flexes" className="min-h-11 flex-1 bg-card lg:w-44 lg:flex-none"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="recommended">Recommended</SelectItem>
                 <SelectItem value="distance">Nearest first</SelectItem>
@@ -206,6 +207,7 @@ export function ExploreMarketplace() {
             </Select>
           </div>
         </div>
+
 
         {activeChips.length > 0 && (
           <div className="mb-6 flex flex-wrap items-center gap-2">
@@ -273,6 +275,8 @@ type FilterProps = {
   setCondition: React.Dispatch<React.SetStateAction<string[]>>;
   ratings: number[];
   setRatings: React.Dispatch<React.SetStateAction<number[]>>;
+  sort: string;
+  setSort: (value: string) => void;
 };
 
 function Filters(props: FilterProps) {
@@ -344,6 +348,18 @@ function Filters(props: FilterProps) {
             onChange={(checked) => props.setRatings((prev) => checked ? [...prev, opt.value] : prev.filter((v) => v !== opt.value))}
           />
         ))}
+      </FilterGroup>
+
+      <FilterGroup title="Sort by">
+        <Select value={props.sort} onValueChange={props.setSort}>
+          <SelectTrigger className="min-h-11 bg-card"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="recommended">Recommended</SelectItem>
+            <SelectItem value="distance">Nearest first</SelectItem>
+            <SelectItem value="price-low">Price: low to high</SelectItem>
+            <SelectItem value="rating">Highest rated</SelectItem>
+          </SelectContent>
+        </Select>
       </FilterGroup>
     </div>
   );
