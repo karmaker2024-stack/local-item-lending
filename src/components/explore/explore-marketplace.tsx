@@ -275,6 +275,8 @@ type FilterProps = {
   setCondition: React.Dispatch<React.SetStateAction<string[]>>;
   ratings: number[];
   setRatings: React.Dispatch<React.SetStateAction<number[]>>;
+  sort: string;
+  setSort: (value: string) => void;
 };
 
 function Filters(props: FilterProps) {
