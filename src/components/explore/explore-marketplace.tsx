@@ -133,6 +133,7 @@ export function ExploreMarketplace() {
     price, setPrice,
     condition, setCondition,
     ratings, setRatings,
+    sort, setSort,
   };
 
   return (
