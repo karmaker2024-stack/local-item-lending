@@ -192,9 +192,9 @@ export function Dashboard() {
 
           <div className="grid gap-10 lg:grid-cols-2 xl:gap-12">
             <div className="space-y-10">
-              {/* ── Active Rentals ── */}
+              {/* ── Active Flexes ── */}
               <section className="space-y-4">
-                <SectionTitle title="Active Rentals" action={{ label: "All rentals", to: "/my-rentals" }} />
+                <SectionTitle title="Active Flexes" action={{ label: "All Flexes", to: "/my-rentals" }} />
                 <div className="space-y-3">
                   {activeRentals.map((r) => (
                     <RentalRow key={r.id} rental={r} />
