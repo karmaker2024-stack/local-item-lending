@@ -13,7 +13,7 @@ export const accountNavigation = [
   { label: "Overview", to: "/dashboard", icon: LayoutDashboard },
   { label: "My listings", to: "/my-listings", icon: List },
   { label: "Add listing", to: "/add-listing", icon: PlusCircle },
-  { label: "My rentals", to: "/my-rentals", icon: Tags },
+  { label: "My Flexes", to: "/my-rentals", icon: Tags },
   { label: "Messages", to: "/messages", icon: MessageCircle },
   { label: "Saved items", to: "/saved-items", icon: Heart },
   { label: "Impact", to: "/impact-dashboard", icon: Leaf },
